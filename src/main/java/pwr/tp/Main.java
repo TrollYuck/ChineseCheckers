@@ -7,7 +7,6 @@ import pwr.tp.domain.StarBoard.StarBoard;
 public class Main {
   public static void main(String[] args) {
 
-    StarBoard starBoard = new StarBoard();
 
   }
 }

@@ -1,14 +1,20 @@
 package pwr.tp.Game;
 
 import pwr.tp.domain.Board;
-import pwr.tp.domain.BoardTypes;
+import pwr.tp.movement.Move;
 
-public class Game {
+public class Lobby {
     int numOfPlayers;
     Board board;
-    public Game(int numOfPlayers, Board board){
+    public Lobby(int numOfPlayers, Board board){
         this.board = board;
         this.numOfPlayers = numOfPlayers;
     }
+
+    public void receiveMove(Move move) {
+
+    }
+
+
 
 }
