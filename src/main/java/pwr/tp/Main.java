@@ -1,6 +1,6 @@
 package pwr.tp;
 
-import pwr.tp.domain.StarBoard;
+import pwr.tp.domain.StarBoard.StarBoard;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
