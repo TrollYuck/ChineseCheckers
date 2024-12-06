@@ -1,5 +1,6 @@
 package pwr.tp.server;
 
+import pwr.tp.game.Lobby;
 import pwr.tp.server.messages.Message;
 import pwr.tp.server.messages.MoveMessage;
 

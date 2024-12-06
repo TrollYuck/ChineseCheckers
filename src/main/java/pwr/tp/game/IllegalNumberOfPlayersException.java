@@ -1,4 +1,4 @@
-package pwr.tp.Game;
+package pwr.tp.game;
 
 public class IllegalNumberOfPlayersException extends Exception {
     public IllegalNumberOfPlayersException() {

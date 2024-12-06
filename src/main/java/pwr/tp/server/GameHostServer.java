@@ -1,5 +1,7 @@
 package pwr.tp.server;
 
+import pwr.tp.game.Lobby;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;

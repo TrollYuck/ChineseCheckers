@@ -1,4 +1,4 @@
-package pwr.tp.Game;
+package pwr.tp.game;
 
 import pwr.tp.domain.Board;
 import pwr.tp.domain.StarBoard.NoPlayersStarBoard;
