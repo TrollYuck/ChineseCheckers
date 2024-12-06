@@ -37,7 +37,8 @@ public class Client {
 
   private void handleUserInput() {
     while (running) {
-      System.out.println("Enter your move (x, y) or 'quit' to exit:");
+      System.out.println("Enter your move starting from x1,y1 ; destination to x2,y2 \n" +
+              " or 'quit' to exit:");
       String input = scannerIn.nextLine();
         if (input.equals("quit")) {
           running = false;
@@ -50,17 +51,31 @@ public class Client {
 
   private void processMoveMessage(String message) {
     try {
-      String[] coords = message.trim().split(",");
+      String[] coords = message.trim().split(";");
       for (String s : coords) {
         s = s.trim();
       }
       if (coords.length != 2) {
-        System.out.println("Invalid input. Please enter two numbers separated by a comma.");
+        System.out.println("Invalid input. Please enter two points separated by a semicolon.");
         return;
       }
-      int x = Integer.parseInt(coords[0]);
-      int y = Integer.parseInt(coords[1]);
-      send(new MoveMessage(x, y));
+      String[] start = coords[0].split(",");
+      String[] end = coords[1].split(",");
+      if (start.length != 2 || end.length != 2) {
+          System.out.println("Invalid input. Please enter two points separated by a comma.");
+          return;
+      }
+      for (String s : start) {
+        s = s.trim();
+      }
+      for (String s : end) {
+          s = s.trim();
+      }
+      int x1 = Integer.parseInt(start[0]);
+      int y1 = Integer.parseInt(start[1]);
+      int x2 = Integer.parseInt(end[0]);
+      int y2 = Integer.parseInt(end[1]);
+      send(new MoveMessage(x1, y1, x2, y2));
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
