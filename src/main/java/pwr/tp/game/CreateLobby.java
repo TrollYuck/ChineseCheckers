@@ -4,7 +4,7 @@ import pwr.tp.domain.Board;
 import pwr.tp.domain.StarBoard.NoPlayersStarBoard;
 import pwr.tp.domain.StarBoard.StarBoard;
 
-public class CreateGame {
+public class CreateLobby {
 
     public static Lobby createGame(int numOfPlayers, String boardTypeString) throws IllegalBoardTypeException, IllegalNumberOfPlayersException{
         if(boardTypeString.equalsIgnoreCase("star board")) {
