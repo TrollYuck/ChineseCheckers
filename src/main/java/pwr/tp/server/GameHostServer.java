@@ -67,9 +67,21 @@ public class GameHostServer {
     }
   }
 
-    public static void main(String[] args) {
-        var server = new GameHostServer(12345, 2);
-        server.start();
+  public synchronized void sendToAllExcept(Object object, ClientHandler clientHandler) {
+    for (var client : clients) {
+      if (client != clientHandler) {
+        client.send(object);
+      }
     }
+  }
+
+  public synchronized int getPlayerIndex(ClientHandler clientHandler) {
+    return (clients.indexOf(clientHandler) + 1);
+  }
+
+  public static void main(String[] args) {
+      var server = new GameHostServer(12345, 2);
+      server.start();
+  }
 
 }
