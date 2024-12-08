@@ -1,6 +1,5 @@
 package pwr.tp.server;
 
-import pwr.tp.game.Lobby;
 import pwr.tp.server.messages.Message;
 import pwr.tp.server.messages.MoveMessage;
 
@@ -14,11 +13,11 @@ import java.net.SocketException;
 public class ClientHandler implements Runnable {
 
   private Socket clientSocket;
-  private GameHostServer gameHostServer;
+  private Server gameHostServer;
   private ObjectOutputStream out;
   private ObjectInputStream in;
 
-    public ClientHandler(Socket clientSocket, GameHostServer gameHostServer) {
+    public ClientHandler(Socket clientSocket, Server gameHostServer) {
         this.clientSocket = clientSocket;
         this.gameHostServer = gameHostServer;
         try {
