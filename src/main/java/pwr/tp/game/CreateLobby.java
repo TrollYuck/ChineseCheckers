@@ -16,5 +16,5 @@ public class CreateLobby {
         }
         throw new IllegalBoardTypeException();
     }
-
+    //check if branches work
 }
