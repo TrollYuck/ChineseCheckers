@@ -12,127 +12,94 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientHandler implements Runnable{
+    public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private Socket socket;
-    private static List<ClientHandler> clientHandlers;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
-    private String username;
-    private static Lobby lobby;
-    private static int idx;
+    private String clientUsername;
+    private static int idx = 0;
 
-    public ClientHandler (Socket socket) {
-        try{
+    public ClientHandler(Socket socket) {
+        try {
             this.socket = socket;
-            clientHandlers = new ArrayList<>();
-            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            idx = 1;
-            username = bufferedReader.readLine();
-
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.clientUsername = bufferedReader.readLine();
             clientHandlers.add(this);
-            bufferedWriter.write(clientHandlers.getLast().toString());
-            broadcastMessage("SERVER: Client " + username + "has joined the lobby");
-            if(clientHandlers.getFirst() == this) {
-                initializeLobby();
-                broadcastMessage("SERVER: Lobby has been created with " + lobby.getBoard().getBoardName() + "and " + lobby.getNumOfPlayers() + "players!");
-            }
-
+            broadcastMessage("SERVER: " + clientUsername + " has joined the game!");
         } catch (IOException e) {
             closeEverything();
         }
-
     }
 
-    public void broadcastMessage(String message) {
+    public static int getIdx() {
+        return idx;
+    }
+
+    @Override
+    public void run() {
+        String messageFromClient;
+
+        while(socket.isConnected()) {
+            try{
+                messageFromClient = bufferedReader.readLine();
+                broadcastMessage(messageFromClient);
+            } catch (IOException e) {
+                closeEverything();
+                break;
+            }
+        }
+    }
+
+    public void analiseMessage(String messageFromClient) {
+        if(Lobby.getBoard() == null) {
+            Lobby.setBoard();
+            broadcastMessage("SERVER: The board has been chosen!");
+        } else if(Lobby.getNumOfPlayers() == 0) {
+            Lobby.setNumOfPlayers();
+            broadcastMessage("SERVER: Number of players has been chosen!");
+        } else if(idx == clientHandlers.indexOf(this)) {
+            Lobby.receiveMove();
+            broadcastMessage("SERVER: " + clientUsername + " has moved ");
+            idx++;
+        }
+    }
+
+    public void broadcastMessage(String messageToSend) {
         for(ClientHandler clientHandler: clientHandlers) {
             try{
-                if(clientHandler != this) {
-                    bufferedWriter.write(message);
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-                }
-            } catch (IOException e) {
-                closeEverything();
-            }
-
-        }
-    }
-
-    public void initializeLobby() {
-        while(lobby != null) {
-            try{
-                Pair<String, String> pair = receiveGameSettingsData();
-                lobby = SetLobby.setLobby(pair.getFirst(), pair.getSecond());
-            } catch (IllegalBoardTypeException e) {
-                System.out.println("Such board type doesn't exist");
-            } catch (IllegalNumberOfPlayersException e) {
-                System.out.println("Game on this board can't be played with this many players");
+                clientHandler.bufferedWriter.write(messageToSend);
+                clientHandler.bufferedWriter.newLine();
+                clientHandler.bufferedWriter.flush();
             } catch (IOException e) {
                 closeEverything();
             }
         }
     }
 
-    private Pair<String, String> receiveGameSettingsData() throws IOException {
-        String boardName = bufferedReader.readLine();
-        String nOPlayers = bufferedReader.readLine();
-        return new Pair<>(boardName, nOPlayers);
+    public void removeClientHandler() {
+        clientHandlers.remove(this);
+        broadcastMessage("SERVER: " + clientUsername + " has left the game!");
     }
 
-
-    private void closeEverything() {
+    public void closeEverything() {
         removeClientHandler();
         try{
-            if(socket != null) {
-                socket.close();
-            }
             if(bufferedReader != null) {
                 bufferedReader.close();
             }
             if(bufferedWriter != null) {
                 bufferedWriter.close();
             }
-
+            if(socket != null) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-    private void removeClientHandler() {
-        clientHandlers.remove(this);
-        broadcastMessage("SERVER: " + username + "has left the game!");
-
-    }
-
-    @Override
-    public void run() {
-        while(true) {
-            idx = 0;
-            while(lobby.getNumOfPlayers() == clientHandlers.size()) {
-                try{
-                    if(clientHandlers.get(idx) == this) {
-                        String initialPos = bufferedReader.readLine();
-                        String finalPos = bufferedReader.readLine();
-//                    lobby.receiveMove();
-                        broadcastMessage(username + ": moves from " + initialPos + " to " + finalPos);
-                        idx ++;
-                        idx %= clientHandlers.size();
-                    }
-                } catch (IOException e) {
-                    closeEverything();
-                }
-            }
-            try{
-                String initialPos = bufferedReader.readLine();
-                String finalPos = bufferedReader.readLine();
-                broadcastMessage("endGame");
-            } catch (IOException e) {
-                closeEverything();
-            }
-
-            //        lobby.setToDefaultSettings();
-        }
-
-    }
-}
+}   ///z klient handlera wysyłąm do clienta co ma podać, client obiera to na dodatkowym wątku metodą listenForMessage i ze
+    ///standargowego wątku wysyła odpowiedź do clientHandlera
+    ///wiadomości takie jak set board albo set number of players wysyłamy broadcastem do każdego a make a move socketem
+    ///chcemy żeby to raczej większość kodu znajdowałą się z client handlerze, client i server powinny być czyste
+    ///to na prawdę da się ładnie zaklepać nie piszać dużo kodu wystarczy troche pomyśleć

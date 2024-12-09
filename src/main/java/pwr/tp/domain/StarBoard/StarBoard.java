@@ -13,9 +13,10 @@ public class StarBoard implements Board {
     List<Integer> possibleNoPlayers;
     public StarBoard() {
         fieldSet = new HashSet<>();
+        possibleNoPlayers = new ArrayList<>();
         fillBoardWithFields();
         fillPossibleNoPlayers();
-        printFields();
+//        printFields();
     }
 
     public String getBoardName() {

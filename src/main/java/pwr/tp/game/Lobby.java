@@ -1,6 +1,7 @@
 package pwr.tp.game;
 
 import pwr.tp.domain.Board;
+import pwr.tp.domain.StarBoard.StarBoard;
 import pwr.tp.movement.Move;
 
 public class Lobby {
@@ -12,23 +13,23 @@ public class Lobby {
 
     }
 
-    public Board getBoard() {
+    public static Board getBoard() {
         return board;
     }
 
-    public int getNumOfPlayers() {
+    public static int getNumOfPlayers() {
         return numOfPlayers;
     }
 
-    public void setBoard(Board board) {
+    public static void setBoard(Board board) {
         Lobby.board = board;
     }
 
-    public void setNumOfPlayers(int numOfPlayers) {
+    public static void setNumOfPlayers(int numOfPlayers) {
         Lobby.numOfPlayers = numOfPlayers;
     }
 
-    public void receiveMove(Move move) {
+    public static void receiveMove(Move move) {
 
     }
 
