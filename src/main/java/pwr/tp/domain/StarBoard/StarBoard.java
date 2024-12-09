@@ -18,6 +18,10 @@ public class StarBoard implements Board {
         printFields();
     }
 
+    public String getBoardName() {
+        return "star board";
+    }
+
     @Override
     public void receiveMove(Move Move) {
 

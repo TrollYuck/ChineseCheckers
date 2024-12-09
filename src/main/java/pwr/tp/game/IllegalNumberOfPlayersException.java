@@ -1,6 +1,8 @@
 package pwr.tp.game;
 
-public class IllegalNumberOfPlayersException extends Exception {
+import java.io.IOException;
+
+public class IllegalNumberOfPlayersException extends IOException {
     public IllegalNumberOfPlayersException() {
         super();
     }

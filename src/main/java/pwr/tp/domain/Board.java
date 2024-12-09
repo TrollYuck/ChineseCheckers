@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface Board {
+    String getBoardName();
     void receiveMove(Move Move);
     List<Integer> getPossibleNoPlayers();
 }

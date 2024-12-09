@@ -1,13 +1,48 @@
 package pwr.tp.server;
 
+import pwr.tp.client.Client;
+
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
     private ServerSocket serverSocket;
 
+    public Server (ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
 
+    private void startServer() {
+        try{
+            Socket socket = serverSocket.accept();
+            System.out.println("A client has connected!");
+            ClientHandler clientHandler = new ClientHandler(socket);
 
-    public static void main(String[] args) {
+            Thread thread = new Thread(clientHandler);
+            thread.start();
+
+        } catch (IOException e) {
+            closeSocketServer();
+        }
+
+    }
+
+    private void closeSocketServer() {
+        try{
+            if(serverSocket != null) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(12345);
+        Server server = new Server(serverSocket);
+        server.startServer();
 
     }
 
