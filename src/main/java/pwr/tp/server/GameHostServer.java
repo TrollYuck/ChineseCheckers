@@ -1,6 +1,6 @@
 package pwr.tp.server;
 
-import pwr.tp.game.CreateGame;
+import pwr.tp.game.CreateLobby;
 import pwr.tp.game.IllegalBoardTypeException;
 import pwr.tp.game.IllegalNumberOfPlayersException;
 import pwr.tp.game.Lobby;
@@ -125,7 +125,7 @@ public class GameHostServer {
 
   public Boolean createLobby(){
     try {
-      activeLobbies.add(CreateGame.createGame(6, "star board"));
+      activeLobbies.add(CreateLobby.createLobby(6, "star board"));
       activeLobbiesCount++;
       return true;
     } catch (IllegalBoardTypeException | IllegalNumberOfPlayersException e) {
