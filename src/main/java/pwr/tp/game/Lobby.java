@@ -4,12 +4,12 @@ import pwr.tp.domain.Board;
 import pwr.tp.movement.Move;
 
 public class Lobby {
-    int numOfPlayers;
-    Board board;
+    private static int numOfPlayers;
+    private static Board board;
+    private static Lobby instance;
 
-    public Lobby(int numOfPlayers, Board board){
-        this.board = board;
-        this.numOfPlayers = numOfPlayers;
+    private Lobby(){
+
     }
 
     public Board getBoard() {
@@ -20,10 +20,24 @@ public class Lobby {
         return numOfPlayers;
     }
 
+    public void setBoard(Board board) {
+        Lobby.board = board;
+    }
+
+    public void setNumOfPlayers(int numOfPlayers) {
+        Lobby.numOfPlayers = numOfPlayers;
+    }
+
     public void receiveMove(Move move) {
 
     }
 
+    public static Lobby getInstance() {
+        if(instance == null) {
+            instance = new Lobby();
+        }
+        return instance;
+    }
 
 
 }

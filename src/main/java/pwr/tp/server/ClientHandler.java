@@ -1,10 +1,9 @@
 package pwr.tp.server;
 
-import pwr.tp.game.CreateLobby;
+import pwr.tp.game.SetLobby;
 import pwr.tp.game.IllegalBoardTypeException;
 import pwr.tp.game.IllegalNumberOfPlayersException;
 import pwr.tp.game.Lobby;
-import pwr.tp.movement.Move;
 import pwr.tp.utilityClases.Pair;
 
 import java.io.*;
@@ -31,6 +30,7 @@ public class ClientHandler implements Runnable{
             username = bufferedReader.readLine();
 
             clientHandlers.add(this);
+            bufferedWriter.write(clientHandlers.getLast().toString());
             broadcastMessage("SERVER: Client " + username + "has joined the lobby");
             if(clientHandlers.getFirst() == this) {
                 initializeLobby();
@@ -62,7 +62,7 @@ public class ClientHandler implements Runnable{
         while(lobby != null) {
             try{
                 Pair<String, String> pair = receiveGameSettingsData();
-                lobby = CreateLobby.createLobby(pair.getFirst(), pair.getSecond());
+                lobby = SetLobby.setLobby(pair.getFirst(), pair.getSecond());
             } catch (IllegalBoardTypeException e) {
                 System.out.println("Such board type doesn't exist");
             } catch (IllegalNumberOfPlayersException e) {
@@ -102,21 +102,37 @@ public class ClientHandler implements Runnable{
     private void removeClientHandler() {
         clientHandlers.remove(this);
         broadcastMessage("SERVER: " + username + "has left the game!");
+
     }
 
     @Override
     public void run() {
-        while(lobby.getNumOfPlayers() == clientHandlers.size()) {
-            try{
-                if(clientHandlers.get(idx) == this) {
-                    String initialPos = bufferedReader.readLine();
-                    String finalPos = bufferedReader.readLine();
-                    broadcastMessage(username + ": moves from " + initialPos + " to " + finalPos);
+        while(true) {
+            idx = 0;
+            while(lobby.getNumOfPlayers() == clientHandlers.size()) {
+                try{
+                    if(clientHandlers.get(idx) == this) {
+                        String initialPos = bufferedReader.readLine();
+                        String finalPos = bufferedReader.readLine();
+//                    lobby.receiveMove();
+                        broadcastMessage(username + ": moves from " + initialPos + " to " + finalPos);
+                        idx ++;
+                        idx %= clientHandlers.size();
+                    }
+                } catch (IOException e) {
+                    closeEverything();
                 }
-                idx ++;
+            }
+            try{
+                String initialPos = bufferedReader.readLine();
+                String finalPos = bufferedReader.readLine();
+                broadcastMessage("endGame");
             } catch (IOException e) {
                 closeEverything();
             }
+
+            //        lobby.setToDefaultSettings();
         }
+
     }
 }
