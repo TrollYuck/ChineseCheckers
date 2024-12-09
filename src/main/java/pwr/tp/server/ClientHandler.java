@@ -1,6 +1,8 @@
 package pwr.tp.server;
 
 import pwr.tp.game.Lobby;
+import pwr.tp.server.messages.CreateGameMessage;
+import pwr.tp.server.messages.JoinMessage;
 import pwr.tp.server.messages.Message;
 import pwr.tp.server.messages.MoveMessage;
 
@@ -17,10 +19,13 @@ public class ClientHandler implements Runnable {
   private GameHostServer gameHostServer;
   private ObjectOutputStream out;
   private ObjectInputStream in;
+  private Lobby lobby;
+  private final int playerIndex;
 
-    public ClientHandler(Socket clientSocket, GameHostServer gameHostServer) {
+    public ClientHandler(Socket clientSocket, GameHostServer gameHostServer, int playerIndex) {
         this.clientSocket = clientSocket;
         this.gameHostServer = gameHostServer;
+        this.playerIndex = playerIndex;
         try {
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.flush();
@@ -55,26 +60,50 @@ public class ClientHandler implements Runnable {
       case QUIT:
         processQuitMessage(msg);
         break;
+      case CREATE_GAME:
+        processCreateGameMessage(msg);
+        break;
       default:
         send("Unknown message type");
         break;
     }
   }
 
+  private void processCreateGameMessage(Message msg) {
+    CreateGameMessage createGameMessage = (CreateGameMessage) msg;
+    if (gameHostServer.createLobby()) {
+      send(createGameMessage.getBoardType().toUpperCase() + " lobby created.");
+    } else {
+      send("Unable to create lobby for " + createGameMessage.getBoardType().toUpperCase());
+    }
+  }
+
   private void processJoinMessage(Message msg) {
-      //TODO: implement when the game is ready (game state etc.)
+    JoinMessage joinMessage = (JoinMessage) msg;
+    if (gameHostServer.joinLobby(this, joinMessage.getUniqueLobbyNumber()) && this.lobby != null) {
+      send("JOIN_SUCCESS");
+      send("Connected to lobby number: " + joinMessage.getUniqueLobbyNumber());
+    } else {
+      send("JOIN_FAILURE");
+      send("Unable to connect to lobby number: " + joinMessage.getUniqueLobbyNumber());
+    }
   }
 
   private void processMoveMessage(Message msg) {
     MoveMessage moveMessage = (MoveMessage) msg;
     String move = moveMessage.toString();
-    move = move + " from player " + gameHostServer.getPlayerIndex(this);
-    gameHostServer.sendToAllExcept(move, this);
+    move = move + " from player number" + playerIndex;
+    gameHostServer.sendToAllInLobby(move, this.lobby, this);
   }
 
   private void processQuitMessage(Message msg) {
     gameHostServer.removeClient(this);
-    gameHostServer.broadcast("Player " + gameHostServer.getPlayerIndex(this) + " disconnected");
+    String notification = "Player " + playerIndex + " disconnected";
+    if (this.lobby == null) {
+      gameHostServer.broadcast(notification);
+    } else {
+      gameHostServer.sendToAllInLobby(notification, this.lobby, this);
+    }
     close();
   }
 
@@ -96,6 +125,19 @@ public class ClientHandler implements Runnable {
       ioe.printStackTrace();
     }
   }
+
+  public int getPlayerIndex() {
+      return playerIndex;
+  }
+
+  public Lobby getLobby() {
+      return lobby;
+  }
+
+  public void addLobby(Lobby lobby) {
+      this.lobby = lobby;
+  }
+
 
 
 }

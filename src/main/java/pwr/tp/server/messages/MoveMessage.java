@@ -1,49 +1,41 @@
 package pwr.tp.server.messages;
 
+import pwr.tp.movement.Move;
+import pwr.tp.utilityClases.Pair;
+
 public class MoveMessage implements Message {
   private final MessageType type = MessageType.MOVE;
-  private final int start_a;
-  private final int start_b;
-  private final int final_a;
-  private final int final_b;
+  private final int initialPosA;
+  private final int initialPosB;
+  private final int finalPosA;
+  private final int finalPosB;
 
-  public MoveMessage(int start_a, int start_b, int final_a, int final_b) {
-    this.start_a = start_a;
-    this.start_b = start_b;
-    this.final_a = final_a;
-    this.final_b = final_b;
+  public MoveMessage(int initialPosA, int initialPosB, int finalPosA, int finalPosB) {
+    this.initialPosA = initialPosA;
+    this.initialPosB = initialPosB;
+    this.finalPosA = finalPosA;
+    this.finalPosB = finalPosB;
   }
 
   public MessageType getType() {
     return type;
   }
 
-  public int getStart_a() {
-    return start_a;
+  public Pair<Integer, Integer> getInitialPoint() {
+      return new Pair<>(initialPosA, initialPosB);
   }
 
-  public int getStart_b() {
-    return start_b;
+  public Pair<Integer, Integer> getFinalPoint() {
+      return new Pair<>(finalPosA, finalPosB);
   }
-
-  public int getFinal_a() {
-      return final_a;
+  
+  public Move getMove() {
+    return new Move(getInitialPoint(), getFinalPoint());
   }
-
-  public int getFinal_b() {
-      return final_b;
-  }
-
-  public int[] getStartPoint() {
-      return new int[] {start_a, start_b};
-  }
-
-    public int[] getFinalPoint() {
-        return new int[] {final_a, final_b};
-    }
 
   @Override
   public String toString() {
-    return "Move from " + start_a + ", " + start_b + " to " + final_a + ", " + final_b;
+    return "Move from: " + initialPosA + ", " + initialPosB +
+            " to: " + finalPosA + ", " + finalPosB;
   }
 }

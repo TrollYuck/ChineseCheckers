@@ -9,4 +9,13 @@ public class Move {
         this.initialPosition = initialPosition;
         this.finalPosition = finalPosition;
     }
+
+    public Pair<Integer, Integer> getInitialPosition() {
+        return initialPosition;
+    }
+
+    public Pair<Integer, Integer> getFinalPosition() {
+        return finalPosition;
+    }
+
 }

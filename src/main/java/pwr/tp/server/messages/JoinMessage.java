@@ -2,17 +2,18 @@ package pwr.tp.server.messages;
 
 public class JoinMessage implements Message {
   private final MessageType type = MessageType.JOIN;
-  private final String name;
+  private final int uniqueLobbyNumber;
 
-  public JoinMessage(String name) {
-    this.name = name;
+  public JoinMessage(int lobbyUniqueNumber) {
+    this.uniqueLobbyNumber = lobbyUniqueNumber;
+  }
+
+  public int getUniqueLobbyNumber() {
+    return uniqueLobbyNumber;
   }
 
   public MessageType getType() {
     return type;
   }
 
-  public String getName() {
-    return name;
-  }
 }

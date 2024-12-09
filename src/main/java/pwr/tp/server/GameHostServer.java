@@ -1,5 +1,8 @@
 package pwr.tp.server;
 
+import pwr.tp.game.CreateGame;
+import pwr.tp.game.IllegalBoardTypeException;
+import pwr.tp.game.IllegalNumberOfPlayersException;
 import pwr.tp.game.Lobby;
 
 import java.io.IOException;
@@ -13,9 +16,11 @@ public class GameHostServer {
 
   private final int Port;
   private final int maxPlayers;
+  private int activeLobbiesCount = 0;
   private ServerSocket serverSocket;
   private int playerCount = 0;
   private List<ClientHandler> clients = new ArrayList<>();
+  private List<Lobby> activeLobbies= new ArrayList<>();
   private ExecutorService pool;
 
   public GameHostServer(int Port, int maxPlayers) {
@@ -41,10 +46,10 @@ public class GameHostServer {
       try {
         var clientSocket = serverSocket.accept();
         if (playerCount < maxPlayers) {
-          var clientHandler = new ClientHandler(clientSocket, this);
+          playerCount++;
+          var clientHandler = new ClientHandler(clientSocket, this, playerCount );
           clients.add(clientHandler);
           pool.execute(clientHandler);
-          playerCount++;
           System.out.println("Player " + playerCount + " connected");
           broadcast(playerCount + "/" + maxPlayers + " players connected");
         } else {
@@ -60,6 +65,21 @@ public class GameHostServer {
   public synchronized void removeClient(ClientHandler clientHandler) {
     clients.remove(clientHandler);
     playerCount--;
+    if (clientHandler.getLobby() != null) {
+      for (var lobby : activeLobbies) {
+        if (lobby == clientHandler.getLobby()) {
+          lobby.removePlayer();
+          String notification = "Player number " + clientHandler.getPlayerIndex() + " disconnected\n" +
+                  "Lobby number " + lobby.getUniqueLobbyNumber() + " : " + lobby.getCurrentNumOfPlayers() +
+                  "/" + lobby.getNumOfPlayers();
+          sendToAllInLobby(notification, lobby, clientHandler);
+          if (lobby.getCurrentNumOfPlayers() == 0) {
+            activeLobbies.remove(lobby);
+            activeLobbiesCount--;
+          }
+        }
+      }
+    }
     System.out.println("Player disconnected");
   }
 
@@ -77,12 +97,46 @@ public class GameHostServer {
     }
   }
 
-  public synchronized int getPlayerIndex(ClientHandler clientHandler) {
-    return (clients.indexOf(clientHandler) + 1);
+  public synchronized void sendToAllInLobby(Object object, Lobby lobby, ClientHandler clientHandler) {
+    for (var client : clients) {
+      if (client.getLobby() == lobby && client != clientHandler) {
+        client.send(object);
+      }
+    }
   }
 
+  public synchronized Boolean joinLobby(ClientHandler client, int uniqueLobbyNumber) {
+    if (activeLobbiesCount <= 0) {
+      return false;
+    }
+    for (var lobby : activeLobbies) {
+      if (lobby.getUniqueLobbyNumber() == uniqueLobbyNumber && lobby.getCurrentNumOfPlayers() < lobby.getNumOfPlayers()){
+        client.addLobby(lobby);
+        lobby.addPlayer();
+        String notification = "Player number " + client.getPlayerIndex() + " connected\n" +
+                "Lobby number " + uniqueLobbyNumber + " : " + lobby.getCurrentNumOfPlayers() +
+                "/" + lobby.getNumOfPlayers();
+        sendToAllInLobby(notification, lobby, client);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public Boolean createLobby(){
+    try {
+      activeLobbies.add(CreateGame.createGame(6, "star board"));
+      activeLobbiesCount++;
+      return true;
+    } catch (IllegalBoardTypeException | IllegalNumberOfPlayersException e) {
+      return false;
+    }
+  }
+
+
+
   public static void main(String[] args) {
-      var server = new GameHostServer(12345, 2);
+      var server = new GameHostServer(12345, 24);
       server.start();
   }
 

@@ -16,6 +16,7 @@ public class Client {
   private Scanner scannerIn;
   private Thread receiveThread;
   private boolean running = false;
+  private boolean inGame = false;
 
   public Client(String host, int port) throws Exception {
     try {
@@ -37,16 +38,41 @@ public class Client {
 
   private void handleUserInput() {
     while (running) {
-      System.out.println("Enter your move starting from x1,y1 ; destination to x2,y2 \n" +
-              " or 'quit' to exit:");
-      String input = scannerIn.nextLine();
+      if (inGame) {
+        System.out.println("Enter your move starting from x1,y1 ; destination to x2,y2 \n" +
+                " or 'quit' to exit:");
+        String input = scannerIn.nextLine();
         if (input.equals("quit")) {
-          running = false;
-          processQuitMessage();
+          break;
         } else {
           processMoveMessage(input);
         }
+      } else {
+        System.out.println("'create' to create game, 'join' to join existing game\n" +
+                " or 'quit' to exit:");
+        String input = scannerIn.nextLine();
+        if (input.equals("quit")) {
+          break;
+        } else if (input.equals("create")) {
+          processCreateGameMessage(input);
+        } else if (input.equals("join")) {
+          processJoinMessage(input);
+        } else {
+          System.out.println("Invalid option");
+        }
+      }
     }
+    running = false;
+    processQuitMessage();
+  }
+
+  private void processJoinMessage(String input) {
+    send(new JoinMessage(0));//TODO
+  }
+
+  private void processCreateGameMessage(String input) {
+    send(new CreateGameMessage(6, "")); //TODO
+    processJoinMessage(input);
   }
 
   private void processMoveMessage(String message) {
@@ -61,15 +87,13 @@ public class Client {
       }
       String[] start = coords[0].split(",");
       String[] end = coords[1].split(",");
+      for (int i = 0; i < start.length; i++) {
+        start[i] = start[i].trim();
+        end[i] = end[i].trim();
+      }
       if (start.length != 2 || end.length != 2) {
           System.out.println("Invalid input. Please enter two points separated by a comma.");
           return;
-      }
-      for (String s : start) {
-        s = s.trim();
-      }
-      for (String s : end) {
-          s = s.trim();
       }
       int x1 = Integer.parseInt(start[0]);
       int y1 = Integer.parseInt(start[1]);
@@ -94,7 +118,13 @@ public class Client {
     try {
     while (running) {
       String message = (String) objectInputStream.readObject();
-      System.out.println("Server: " + message);
+      if (message.equals("JOIN_SUCCESS")) {
+        inGame = true;
+      } else if (message.equals("JOIN_FAILURE")) {
+        System.out.println("Failed to join game");
+      } else {
+        System.out.println("Server: " + message);
+      }
     }
     } catch (SocketException e) {
         System.out.println("Disconnected");

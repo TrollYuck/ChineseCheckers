@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class StarBoard implements Board {
     Set<Field> fieldSet;
-    List<Integer> possibleNoPlayers;
+    List<Integer> possibleNoPlayers = new ArrayList<>();
     public StarBoard() {
         fieldSet = new HashSet<>();
         fillBoardWithFields();
