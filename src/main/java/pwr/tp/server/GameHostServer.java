@@ -51,7 +51,8 @@ public class GameHostServer {
           clients.add(clientHandler);
           pool.execute(clientHandler);
           System.out.println("Player " + playerCount + " connected");
-          broadcast(playerCount + "/" + maxPlayers + " players connected");
+          //broadcast(playerCount + "/" + maxPlayers + " players connected");
+          sendToAllInLobby(playerCount + "/" + maxPlayers + " players connected", null, clientHandler);
         } else {
           System.out.println("Server is full("+ playerCount + "/" + maxPlayers +") - rejecting client");
           clientSocket.close();
