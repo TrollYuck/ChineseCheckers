@@ -1,6 +1,9 @@
 package pwr.tp.game;
 
 import pwr.tp.domain.Board;
+import pwr.tp.domain.GamaData;
+import pwr.tp.domain.IllegalFieldOnBoard;
+import pwr.tp.domain.IllegalMoveException;
 import pwr.tp.domain.StarBoard.StarBoard;
 import pwr.tp.movement.Move;
 
@@ -29,8 +32,12 @@ public class Lobby {
         Lobby.numOfPlayers = numOfPlayers;
     }
 
-    public static void receiveMove(Move move) {
+    public static void receiveMove(Move move) throws IllegalMoveException, IllegalFieldOnBoard {
 
+    }
+
+    public static String printBoardTypes() {
+        return GamaData.printBoardTypes();
     }
 
     public static Lobby getInstance() {
