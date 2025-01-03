@@ -41,6 +41,12 @@ public class Lobby {
 
     }
 
+    @Override
+    public String toString() {
+        return "ID: " + uniqueLobbyNumber + ", board type: "+ board +
+                " with " + currentNumOfPlayers + "/" + numOfPlayers + " players";
+    }
+
 
 
 }
