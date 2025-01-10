@@ -124,9 +124,9 @@ public class GameHostServer {
     return false;
   }
 
-  public Boolean createLobby(){
+  public Boolean createLobby(int numOfPlayers, String boardType) {
     try {
-      activeLobbies.add(CreateLobby.createLobby(6, "star board"));
+      activeLobbies.add(CreateLobby.createLobby(numOfPlayers, boardType));
       activeLobbiesCount++;
       return true;
     } catch (IllegalBoardTypeException | IllegalNumberOfPlayersException e) {
@@ -134,7 +134,9 @@ public class GameHostServer {
     }
   }
 
-
+  public List<Lobby> getActiveLobbies() {
+    return activeLobbies;
+  }
 
   public static void main(String[] args) {
       var server = new GameHostServer(12345, 24);
