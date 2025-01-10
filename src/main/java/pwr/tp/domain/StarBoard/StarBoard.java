@@ -9,13 +9,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StarBoard implements Board {
-    Set<Field> fieldSet;
-    List<Integer> possibleNoPlayers = new ArrayList<>();
+    List<Field> fields;
+    List<Integer> possibleNoPlayers;
+    List<Stripe> stripes;
+    StripeManager stripeManager;
     public StarBoard() {
-        fieldSet = new HashSet<>();
+        fields = new ArrayList<>();
+        possibleNoPlayers = new ArrayList<>();
         fillBoardWithFields();
         fillPossibleNoPlayers();
-        printFields();
+        sortFields();
+
+        stripes = new ArrayList<>();
+        stripeManager = new StripeManager(fields, stripes);
     }
 
     @Override
@@ -30,30 +36,29 @@ public class StarBoard implements Board {
     private void fillBoardWithFields() {
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < i + 1; j++) {
-                fieldSet.add(new Field(new Pair<>(i, j)));
+                 fields.add(new Field(new Pair<>(i, j)));
             }
         }
         for (int i = 5; i < 10; i++) {
             for (int j = 1; j < 19 - i; j++) {
-                fieldSet.add(new Field(new Pair<>(i, j)));
+                fields.add(new Field(new Pair<>(i, j)));
             }
         }
         for (int i = 10; i < 14; i++) {
             for(int j = 1; j < i + 1; j++) {
-                fieldSet.add(new Field(new Pair<>(i, j)));
+                fields.add(new Field(new Pair<>(i, j)));
             }
 
         }
         for (int i = 14; i < 18; i++) {
             for (int j = 1; j < 19 - i; j ++) {
-                fieldSet.add(new Field(new Pair<>(i, j)));
+                fields.add(new Field(new Pair<>(i, j)));
             }
         }
     }
 
-    private void printFields() {
-        List<Field> arr = fieldSet.stream().sorted().collect(Collectors.toList());
-        System.out.println(arr);
+    private void sortFields() {
+        fields.sort(null);
     }
 
     private void fillPossibleNoPlayers(){

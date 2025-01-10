@@ -11,6 +11,10 @@ public class Field implements Comparable {
         coordinates = pair;
     }
 
+    public Pair<Integer, Integer> getCoordinates() {
+        return coordinates;
+    }
+
     public String toString(){
         return coordinates.getFirst() + " " + coordinates.getSecond();
     }
@@ -19,5 +23,11 @@ public class Field implements Comparable {
     public int compareTo(Object o) {
         Field object = (Field) o;
         return this.coordinates.compareTo(object.coordinates);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Field object = (Field) o;
+        return object.coordinates.equals(this.coordinates);
     }
 }
