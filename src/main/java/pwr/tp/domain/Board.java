@@ -9,4 +9,5 @@ import java.util.Set;
 public interface Board {
     void receiveMove(Move Move);
     List<Integer> getPossibleNoPlayers();
+    String getName();
 }

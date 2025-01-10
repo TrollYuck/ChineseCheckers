@@ -13,6 +13,7 @@ public class StarBoard implements Board {
     List<Integer> possibleNoPlayers;
     List<Stripe> stripes;
     StripeManager stripeManager;
+
     public StarBoard() {
         fields = new ArrayList<>();
         possibleNoPlayers = new ArrayList<>();
@@ -31,6 +32,11 @@ public class StarBoard implements Board {
     @Override
     public List<Integer> getPossibleNoPlayers() {
         return this.possibleNoPlayers;
+    }
+
+    @Override
+    public String getName() {
+        return "Star Board";
     }
 
     private void fillBoardWithFields() {

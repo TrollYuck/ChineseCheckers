@@ -47,6 +47,25 @@ public class StripeManager {
                 stripe.addField(new Field(new Pair<>(j,k)));
                 k--;
             }
+            stripeList.add(stripe);
+        }
+
+        for(int i = 1; i < 6; i++) {
+            stripe = new Stripe();
+            int k = i;
+            for(int j = i; j < 14; j ++) {
+                if(j == 5) {
+                    k = i + 4;
+                } else if(k > i) {
+                    k--;
+                }
+                stripe.addField(new Field(new Pair<>(j, k)));
+            }
+            stripeList.add(stripe);
+        }
+
+        for(int i = 1; i < 5; i++) {
+
         }
     }
 
