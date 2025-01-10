@@ -13,7 +13,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 
-public class ClientHandler implements Runnable {
+public class  ClientHandler implements Runnable {
 
   private Socket clientSocket;
   private GameHostServer gameHostServer;
@@ -63,6 +63,9 @@ public class ClientHandler implements Runnable {
       case CREATE_GAME:
         processCreateGameMessage(msg);
         break;
+      case LIST_GAMES:
+        send(gameHostServer.getActiveLobbies().toString());
+        break;
       default:
         send("Unknown message type");
         break;
@@ -71,7 +74,7 @@ public class ClientHandler implements Runnable {
 
   private void processCreateGameMessage(Message msg) {
     CreateGameMessage createGameMessage = (CreateGameMessage) msg;
-    if (gameHostServer.createLobby()) {
+    if (gameHostServer.createLobby(createGameMessage.getNumOfPlayers(), createGameMessage.getBoardType())) {
       send(createGameMessage.getBoardType().toUpperCase() + " lobby created.");
     } else {
       send("Unable to create lobby for " + createGameMessage.getBoardType().toUpperCase());

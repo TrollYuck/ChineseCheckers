@@ -37,6 +37,7 @@ public class Client {
   }
 
   private void handleUserInput() {
+    label:
     while (running) {
       if (inGame) {
         System.out.println("Enter your move starting from x1,y1 ; destination to x2,y2 \n" +
@@ -48,17 +49,28 @@ public class Client {
           processMoveMessage(input);
         }
       } else {
-        System.out.println("'create' to create game, 'join' to join existing game\n" +
-                " or 'quit' to exit:");
+        System.out.println("'create' to create game, 'join' to join existing game,\n" +
+                " 'list' to list existing games or 'quit' to exit:");
         String input = scannerIn.nextLine();
-        if (input.equals("quit")) {
-          break;
-        } else if (input.equals("create")) {
-          processCreateGameMessage(input);
-        } else if (input.equals("join")) {
-          processJoinMessage(input);
-        } else {
-          System.out.println("Invalid option");
+        switch (input) {
+          case "quit":
+            break label;
+          case "create":
+            System.out.println("Enter number of players and board type, separated by a semicolon (;): ");
+            input = scannerIn.nextLine();
+            processCreateGameMessage(input);
+            break;
+          case "join":
+            System.out.println("Enter game id: ");
+            input = scannerIn.nextLine();
+            processJoinMessage(input);
+            break;
+          case "list":
+            send(new ListGamesMessage());
+            break;
+          default:
+            System.out.println("Invalid option");
+            break;
         }
       }
     }
@@ -67,12 +79,30 @@ public class Client {
   }
 
   private void processJoinMessage(String input) {
-    send(new JoinMessage(0));//TODO
+    try {
+      int gameId = Integer.parseInt(input);
+      send(new JoinMessage(gameId));
+    } catch (NumberFormatException e) {
+      System.out.println("Invalid input. Please enter a number.");
+    }
   }
 
   private void processCreateGameMessage(String input) {
-    send(new CreateGameMessage(6, "")); //TODO
-    processJoinMessage(input);
+    try {
+        String[] gameInfo = input.trim().split(";");
+        for (String s : gameInfo) {
+            s = s.trim();
+        }
+        if (gameInfo.length != 2) {
+            System.out.println("Invalid input. Please enter two values separated by a semicolon (;).");
+            return;
+        }
+        int players = Integer.parseInt(gameInfo[0]);
+        String boardType = gameInfo[1];
+        send(new CreateGameMessage(players, boardType));
+        } catch (NumberFormatException e) {
+        System.out.println("Invalid input. Please enter two values separated by a semicolon (;).");
+    }
   }
 
   private void processMoveMessage(String message) {
@@ -82,7 +112,7 @@ public class Client {
         s = s.trim();
       }
       if (coords.length != 2) {
-        System.out.println("Invalid input. Please enter two points separated by a semicolon.");
+        System.out.println("Invalid input. Please enter two points separated by a semicolon (;).");
         return;
       }
       String[] start = coords[0].split(",");
@@ -92,7 +122,7 @@ public class Client {
         end[i] = end[i].trim();
       }
       if (start.length != 2 || end.length != 2) {
-          System.out.println("Invalid input. Please enter two points separated by a comma.");
+          System.out.println("Invalid input. Please enter two points separated by a semicolon (;).");
           return;
       }
       int x1 = Integer.parseInt(start[0]);
@@ -101,7 +131,7 @@ public class Client {
       int y2 = Integer.parseInt(end[1]);
       send(new MoveMessage(x1, y1, x2, y2));
     } catch (NumberFormatException e) {
-      e.printStackTrace();
+      System.out.println("Invalid input. Please enter two points separated by a semicolon (;).");
     }
   }
 
