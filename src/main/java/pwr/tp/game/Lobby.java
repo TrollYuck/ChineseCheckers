@@ -43,7 +43,7 @@ public class Lobby {
 
     @Override
     public String toString() {
-        return "ID: " + uniqueLobbyNumber + ", board type: "+ board +
+        return "ID: " + uniqueLobbyNumber + ", board type: "+ board.getName() +
                 " with " + currentNumOfPlayers + "/" + numOfPlayers + " players";
     }
 

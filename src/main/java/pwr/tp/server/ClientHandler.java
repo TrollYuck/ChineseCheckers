@@ -15,8 +15,8 @@ import java.net.SocketException;
 
 public class  ClientHandler implements Runnable {
 
-  private Socket clientSocket;
-  private GameHostServer gameHostServer;
+  private final Socket clientSocket;
+  private final GameHostServer gameHostServer;
   private ObjectOutputStream out;
   private ObjectInputStream in;
   private Lobby lobby;
@@ -66,6 +66,9 @@ public class  ClientHandler implements Runnable {
       case LIST_GAMES:
         send(gameHostServer.getActiveLobbies().toString());
         break;
+      case DISCONNECT_GAME:
+        processDisconnectGameMessage();
+        break;
       default:
         send("Unknown message type");
         break;
@@ -74,10 +77,11 @@ public class  ClientHandler implements Runnable {
 
   private void processCreateGameMessage(Message msg) {
     CreateGameMessage createGameMessage = (CreateGameMessage) msg;
-    if (gameHostServer.createLobby(createGameMessage.getNumOfPlayers(), createGameMessage.getBoardType())) {
+    if (gameHostServer.createLobby(createGameMessage.getNumOfPlayers(), createGameMessage.getBoardType(), this)) {
       send(createGameMessage.getBoardType().toUpperCase() + " lobby created.");
+      send("JOIN_SUCCESS");
     } else {
-      send("Unable to create lobby for " + createGameMessage.getBoardType().toUpperCase());
+      send("Unable to create lobby");
     }
   }
 
@@ -101,13 +105,11 @@ public class  ClientHandler implements Runnable {
 
   private void processQuitMessage(Message msg) {
     gameHostServer.removeClient(this);
-    String notification = "Player " + playerIndex + " disconnected";
-    if (this.lobby == null) {
-      gameHostServer.broadcast(notification);
-    } else {
-      gameHostServer.sendToAllInLobby(notification, this.lobby, this);
-    }
     close();
+  }
+
+  private void processDisconnectGameMessage() {
+    gameHostServer.quitLobby(this);
   }
 
   public void send(Object object) {
