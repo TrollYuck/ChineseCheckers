@@ -8,12 +8,13 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class ClientMainView extends Application {
+public class MainGui extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/ClientMainView.fxml")));
-    primaryStage.setTitle("My JavaFX Application");
+    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/ClientTitleView.fxml")));
+    primaryStage.setTitle("Chinese Checkers");
     primaryStage.setScene(new Scene(root));
+    primaryStage.setResizable(false);
     primaryStage.show();
   }
 

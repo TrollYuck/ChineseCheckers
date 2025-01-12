@@ -3,9 +3,10 @@ package pwr.tp.game;
 import pwr.tp.domain.Board;
 import pwr.tp.movement.Move;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Lobby {
+public class Lobby  {
     private static final AtomicInteger COUNT = new AtomicInteger(0);
     private final int uniqueLobbyNumber = COUNT.getAndIncrement();
     int numOfPlayers;

@@ -1,16 +1,15 @@
 package pwr.tp.server;
 
 import pwr.tp.game.Lobby;
-import pwr.tp.server.messages.CreateGameMessage;
-import pwr.tp.server.messages.JoinMessage;
-import pwr.tp.server.messages.Message;
-import pwr.tp.server.messages.MoveMessage;
+import pwr.tp.server.messages.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class  ClientHandler implements Runnable {
@@ -64,7 +63,12 @@ public class  ClientHandler implements Runnable {
         processCreateGameMessage(msg);
         break;
       case LIST_GAMES:
-        send(gameHostServer.getActiveLobbies().toString());
+        List<Lobby> activeLobbiesList = gameHostServer.getActiveLobbies();
+        List<String> activeLobbiesString = new ArrayList<>();
+        for (Lobby lobby : activeLobbiesList) {
+          activeLobbiesString.add(lobby.toString());
+        }
+        send(new ListGamesMessage(activeLobbiesString));
         break;
       case DISCONNECT_GAME:
         processDisconnectGameMessage();

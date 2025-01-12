@@ -57,7 +57,7 @@ public class Client {
             processJoinMessage(input);
             break;
           case "list":
-            send(new ListGamesMessage());
+            send(new ListGamesMessage(null));
             break;
           default:
             System.out.println("Invalid option");
