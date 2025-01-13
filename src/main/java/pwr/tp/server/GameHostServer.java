@@ -19,9 +19,9 @@ public class GameHostServer {
   private int activeLobbiesCount = 0;
   private ServerSocket serverSocket;
   private int playerCount = 0;
-  private List<ClientHandler> clients = new ArrayList<>();
-  private List<Lobby> activeLobbies= new ArrayList<>();
-  private ExecutorService pool;
+  private final List<ClientHandler> clients = new ArrayList<>();
+  private final List<Lobby> activeLobbies= new ArrayList<>();
+  private final ExecutorService pool;
 
   public GameHostServer(int Port, int maxPlayers) {
     this.Port = Port;
@@ -52,7 +52,7 @@ public class GameHostServer {
           pool.execute(clientHandler);
           System.out.println("Player " + playerCount + " connected");
           //broadcast(playerCount + "/" + maxPlayers + " players connected");
-          sendToAllInLobby(playerCount + "/" + maxPlayers + " players connected", null, clientHandler);
+          sendToAllInLobby(playerCount + "/" + maxPlayers + " players connected", null, null);
         } else {
           System.out.println("Server is full("+ playerCount + "/" + maxPlayers +") - rejecting client");
           clientSocket.close();
@@ -66,21 +66,7 @@ public class GameHostServer {
   public synchronized void removeClient(ClientHandler clientHandler) {
     clients.remove(clientHandler);
     playerCount--;
-    if (clientHandler.getLobby() != null) {
-      for (var lobby : activeLobbies) {
-        if (lobby == clientHandler.getLobby()) {
-          lobby.removePlayer();
-          String notification = "Player number " + clientHandler.getPlayerIndex() + " disconnected\n" +
-                  "Lobby number " + lobby.getUniqueLobbyNumber() + " : " + lobby.getCurrentNumOfPlayers() +
-                  "/" + lobby.getNumOfPlayers();
-          sendToAllInLobby(notification, lobby, clientHandler);
-          if (lobby.getCurrentNumOfPlayers() == 0) {
-            activeLobbies.remove(lobby);
-            activeLobbiesCount--;
-          }
-        }
-      }
-    }
+    quitLobby(clientHandler);
     System.out.println("Player disconnected");
   }
 
@@ -124,12 +110,40 @@ public class GameHostServer {
     return false;
   }
 
-  public Boolean createLobby(int numOfPlayers, String boardType) {
+  public synchronized void quitLobby(ClientHandler client) {
+    if (client.getLobby() != null) {
+      for (var lobby : activeLobbies) {
+        if (lobby == client.getLobby()) {
+          lobby.removePlayer();
+          String notification = "Player number " + client.getPlayerIndex() + " disconnected\n" +
+                  "Lobby number " + lobby.getUniqueLobbyNumber() + " : " + lobby.getCurrentNumOfPlayers() +
+                  "/" + lobby.getNumOfPlayers();
+          sendToAllInLobby(notification, lobby, client);
+          client.send("Disconnected from lobby number: " + lobby.getUniqueLobbyNumber());
+          if (lobby.getCurrentNumOfPlayers() == 0) {
+            activeLobbies.remove(lobby);
+            activeLobbiesCount--;
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  public Boolean createLobby(int numOfPlayers, String boardType, ClientHandler client) {
     try {
-      activeLobbies.add(CreateLobby.createLobby(numOfPlayers, boardType));
+      Lobby lobby = CreateLobby.createLobby(numOfPlayers, boardType);
+      activeLobbies.add(lobby);
       activeLobbiesCount++;
+      if (!joinLobby(client, lobby.getUniqueLobbyNumber())) {
+        return false;
+      };
       return true;
-    } catch (IllegalBoardTypeException | IllegalNumberOfPlayersException e) {
+    } catch (IllegalBoardTypeException IBE) {
+      client.send("Invalid board type: " + boardType);
+      return false;
+    } catch (IllegalNumberOfPlayersException INP) {
+      client.send("Invalid number of players: " + numOfPlayers);
       return false;
     }
   }

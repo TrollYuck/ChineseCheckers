@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Client {
@@ -14,7 +15,6 @@ public class Client {
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
   private Scanner scannerIn;
-  private Thread receiveThread;
   private boolean running = false;
   private boolean inGame = false;
 
@@ -26,10 +26,8 @@ public class Client {
         }
       }));
       connect(host, port);
-      receiveThread = new Thread(this::receiveMessages);
+      Thread receiveThread = new Thread(this::receiveMessages);
       receiveThread.start();
-//      Thread userInputThread = new Thread(this::handleUserInput);
-//      userInputThread.start();
       handleUserInput();
     } catch (Exception e) {
       e.printStackTrace();
@@ -39,22 +37,15 @@ public class Client {
   private void handleUserInput() {
     label:
     while (running) {
-      if (inGame) {
-        System.out.println("Enter your move starting from x1,y1 ; destination to x2,y2 \n" +
-                " or 'quit' to exit:");
-        String input = scannerIn.nextLine();
-        if (input.equals("quit")) {
-          break;
-        } else {
-          processMoveMessage(input);
-        }
-      } else {
+      if (!inGame) {
         System.out.println("'create' to create game, 'join' to join existing game,\n" +
                 " 'list' to list existing games or 'quit' to exit:");
         String input = scannerIn.nextLine();
+        input = input.toLowerCase();
+        input = input.trim();
         switch (input) {
           case "quit":
-            break label;
+            break;
           case "create":
             System.out.println("Enter number of players and board type, separated by a semicolon (;): ");
             input = scannerIn.nextLine();
@@ -66,15 +57,36 @@ public class Client {
             processJoinMessage(input);
             break;
           case "list":
-            send(new ListGamesMessage());
+            send(new ListGamesMessage(null));
             break;
+          default:
+            System.out.println("Invalid option");
+            break;
+        }
+      } else {
+        System.out.println("Enter action ('move' or 'disconnect'):");
+        String input = scannerIn.nextLine();
+        switch (input){
+          case "move":
+            System.out.println("Enter your move starting from x1,y1 ; destination to x2,y2 \n" +
+                    " or 'quit' to exit:");
+            input = scannerIn.nextLine();
+            if (input.equals("quit")) {
+              break;
+            }
+            processMoveMessage(input);
+            break;
+          case "disconnect":
+            processDisconnectMessage();
+            break;
+          case "quit":
+            break label;
           default:
             System.out.println("Invalid option");
             break;
         }
       }
     }
-    running = false;
     processQuitMessage();
   }
 
@@ -89,27 +101,27 @@ public class Client {
 
   private void processCreateGameMessage(String input) {
     try {
-        String[] gameInfo = input.trim().split(";");
-        for (String s : gameInfo) {
-            s = s.trim();
-        }
-        if (gameInfo.length != 2) {
-            System.out.println("Invalid input. Please enter two values separated by a semicolon (;).");
-            return;
-        }
-        int players = Integer.parseInt(gameInfo[0]);
-        String boardType = gameInfo[1];
-        send(new CreateGameMessage(players, boardType));
-        } catch (NumberFormatException e) {
-        System.out.println("Invalid input. Please enter two values separated by a semicolon (;).");
+      String[] gameInfo = input.trim().split(";");
+      for (int i = 0; i < gameInfo.length; i++) {
+        gameInfo[i] = gameInfo[i].trim();
+      }
+      if (gameInfo.length != 2) {
+          System.out.println("Invalid input. Please enter two values separated by a semicolon (;).");
+          return;
+      }
+      int players = Integer.parseInt(gameInfo[0]);
+      String boardType = gameInfo[1];
+      send(new CreateGameMessage(players, boardType));
+      } catch (NumberFormatException e) {
+      System.out.println("Invalid input. Please enter two values separated by a semicolon (;).");
     }
   }
 
   private void processMoveMessage(String message) {
     try {
       String[] coords = message.trim().split(";");
-      for (String s : coords) {
-        s = s.trim();
+      for (int i = 0; i < coords.length; i++) {
+        coords[i] = coords[i].trim();
       }
       if (coords.length != 2) {
         System.out.println("Invalid input. Please enter two points separated by a semicolon (;).");
@@ -137,7 +149,6 @@ public class Client {
 
   private void processQuitMessage() {
     running = false;
-    //receiveThread.interrupt();
     if (!socket.isClosed()) {
       send(new QuitMessage());
     }
@@ -188,6 +199,11 @@ public class Client {
       }
   }
 
+  private void processDisconnectMessage() {
+    inGame = false;
+    send(new DisconnectGameMessage());
+  }
+
   public synchronized void close() {
     try {
       if (objectOutputStream != null) {
@@ -213,7 +229,7 @@ public class Client {
       try {
           new Client("localhost", 12345);
       } catch (Exception e) {
-          e.printStackTrace();
+        System.out.println("Server not found");;
       }
   }
 

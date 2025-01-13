@@ -8,4 +8,5 @@ public enum MessageType {
   CREATE_GAME,
   START_GAME,
   END_GAME,
+  DISCONNECT_GAME
 }

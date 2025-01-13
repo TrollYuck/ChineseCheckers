@@ -5,6 +5,7 @@ import pwr.tp.domain.Field;
 import pwr.tp.movement.Move;
 import pwr.tp.utilityClases.Pair;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 

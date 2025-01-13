@@ -41,7 +41,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>pwr.tp.client.GUI.ClientMainView</mainClass> <!-- Replace with your main class -->
+          <mainClass>pwr.tp.client.GUI.MainGui</mainClass> <!-- Replace with your main class -->
         </configuration>
       </plugin>
     </plugins>
