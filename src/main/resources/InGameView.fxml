@@ -51,7 +51,7 @@
                         <Font name="System Bold Italic" size="12.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="PlayerPawnsTextField" prefHeight="285.0" prefWidth="210.0" promptText="Your paws will be displayed here" />
+                  <TextArea fx:id="PlayerPawnsTextField" prefHeight="300.0" prefWidth="210.0" promptText="Your paws will be displayed here" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="402.0">
@@ -61,7 +61,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="LobbyInfoTextField" prefHeight="298.0" prefWidth="390.0" promptText="Lobby info here" />
+                  <TextArea fx:id="LobbyInfoTextField" prefHeight="300.0" prefWidth="390.0" promptText="Lobby info here" />
                </children>
             </VBox>
          </children>
