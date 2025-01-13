@@ -25,6 +25,9 @@ public class StarBoard implements Board {
         stripeManager = new StripeManager(fields, stripes);
     }
 
+    public List<Stripe> getStripes() {
+        return stripes;
+    }
     @Override
     public void receiveMove(Move Move) {
 

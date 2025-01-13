@@ -6,9 +6,12 @@ import java.util.Comparator;
 
 public class Field implements Comparable {
     Pair<Integer, Integer> coordinates;
+    private boolean isEmpty = true;
+    private int whichPlayersPawn = 0;
 
     public Field(Pair<Integer, Integer> pair) {
         coordinates = pair;
+        setEmpty();
     }
 
     public Pair<Integer, Integer> getCoordinates() {
@@ -17,6 +20,20 @@ public class Field implements Comparable {
 
     public String toString(){
         return coordinates.getFirst() + " " + coordinates.getSecond();
+    }
+
+    public void setEmpty() {
+        isEmpty = true;
+        whichPlayersPawn = 0;
+    }
+
+    public void setFull(int num) {
+        isEmpty = false;
+        whichPlayersPawn = num;
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
     }
 
     @Override
