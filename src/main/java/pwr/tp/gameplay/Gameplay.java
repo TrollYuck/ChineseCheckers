@@ -8,6 +8,7 @@ import pwr.tp.domain.StarBoard.Stripe;
 import pwr.tp.movement.Move;
 import pwr.tp.utilityClases.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static pwr.tp.movement.Move.isMoveLegal;
@@ -15,23 +16,28 @@ import static pwr.tp.movement.Move.isMoveLegal;
 public class Gameplay {
     int numberOfPlayers;
     String gameState;
-    List<Player> players;
+    List<Player> players = new ArrayList<>();
     List<Stripe> stripes;
     Board board;
+    int currentPlayerIndex;
+
     public Gameplay(int numberOfPlayers, Board board) {
         this.numberOfPlayers = numberOfPlayers;
         stripes = board.getStripes();
         this.board = board;
         gameState = "not started";
+        currentPlayerIndex = 0;
         notStarted();
     }
 
     public void notStarted() {
         createPlayers();
         setUpPawns();
-        start();
+        //start();
     }
 
+    //redundant method
+    //TODO: remove,
     public void start() {
         Player currentPlayer;
         int pointer = 0;
@@ -105,10 +111,32 @@ public class Gameplay {
         }
     }
 
-    private boolean isMoveLegal(Player player, Move move){
+    public boolean isMoveLegal(Player player, Move move){
         if(player.getPawns().contains(new Pawn(new Field(move.getInitialPosition())))) {
             Move.isMoveLegal(move, stripes);
         }
         return false;
+    }
+
+    public void receiveMove(Move move, int playerIndex) throws IllegalMoveException {
+        if(playerIndex == currentPlayerIndex) {
+            if(isMoveLegal(players.get(playerIndex), move)) {
+                //movePawn(move);
+                currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
+            } else {
+                throw new IllegalMoveException("Illegal move: " + move);
+            }
+        }
+    }
+
+    public List<String> getPawnsFromPlayer(int playerIndex) {
+        List<Pawn> pawns = players.get(playerIndex).getPawns();
+        List<String> result = new ArrayList<>();
+        int i = 0; //TODO: remove and implement toString in Pawn
+        for(Pawn pawn: pawns) {
+            //result.add(pawn.getField().getCoordinates().toString());
+            result.add("Pawn " + i + " is here :>");
+        }
+        return result;
     }
 }
