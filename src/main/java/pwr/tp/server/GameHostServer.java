@@ -97,7 +97,7 @@ public class GameHostServer {
       return false;
     }
     for (var lobby : activeLobbies) {
-      if (lobby.getUniqueLobbyNumber() == uniqueLobbyNumber && lobby.getCurrentNumOfPlayers() < lobby.getNumOfPlayers()){
+      if (lobby.getUniqueLobbyNumber() == uniqueLobbyNumber && !lobby.isPlayerThresholdReached()) {
         client.addLobby(lobby);
         lobby.addPlayer();
         String notification = "Player number " + client.getPlayerIndex() + " connected\n" +
@@ -135,9 +135,6 @@ public class GameHostServer {
       Lobby lobby = CreateLobby.createLobby(numOfPlayers, boardType);
       activeLobbies.add(lobby);
       activeLobbiesCount++;
-      if (!joinLobby(client, lobby.getUniqueLobbyNumber())) {
-        return false;
-      };
       return true;
     } catch (IllegalBoardTypeException IBE) {
       client.send("Invalid board type: " + boardType);
@@ -155,6 +152,10 @@ public class GameHostServer {
   public static void main(String[] args) {
       var server = new GameHostServer(12345, 24);
       server.start();
+  }
+
+  public synchronized void startGame(Lobby lobby) {
+      lobby.startGame();
   }
 
 }

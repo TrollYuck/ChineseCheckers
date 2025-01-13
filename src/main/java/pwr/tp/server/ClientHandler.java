@@ -1,6 +1,7 @@
 package pwr.tp.server;
 
 import pwr.tp.game.Lobby;
+import pwr.tp.gameplay.IllegalMoveException;
 import pwr.tp.server.messages.*;
 
 import java.io.IOException;
@@ -70,6 +71,9 @@ public class  ClientHandler implements Runnable {
         }
         send(new ListGamesMessage(activeLobbiesString));
         break;
+      case UPDATE_PAWNS:
+        processUpdatePawnsMessage(msg);
+        break;
       case DISCONNECT_GAME:
         processDisconnectGameMessage();
         break;
@@ -79,11 +83,20 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+  private void processUpdatePawnsMessage(Message msg) {
+    if (lobby.isGameStarted()) {
+      UpdatePawnsMessage updatePawnsMessage = (UpdatePawnsMessage) msg;
+      updatePawnsMessage.setPawns(lobby.getPawnsFromPlayer(playerIndex));
+      send(updatePawnsMessage);
+    } else {
+      send("Game not started, cannot update pawns");
+    }
+  }
+
   private void processCreateGameMessage(Message msg) {
     CreateGameMessage createGameMessage = (CreateGameMessage) msg;
     if (gameHostServer.createLobby(createGameMessage.getNumOfPlayers(), createGameMessage.getBoardType(), this)) {
       send(createGameMessage.getBoardType().toUpperCase() + " lobby created.");
-      send("JOIN_SUCCESS");
     } else {
       send("Unable to create lobby");
     }
@@ -92,19 +105,35 @@ public class  ClientHandler implements Runnable {
   private void processJoinMessage(Message msg) {
     JoinMessage joinMessage = (JoinMessage) msg;
     if (gameHostServer.joinLobby(this, joinMessage.getUniqueLobbyNumber()) && this.lobby != null) {
-      send("JOIN_SUCCESS");
+      joinMessage.setPlayerIndex(playerIndex);
+      joinMessage.setAccepted(true);
+      send(joinMessage);
       send("Connected to lobby number: " + joinMessage.getUniqueLobbyNumber());
+      if (lobby.getCurrentNumOfPlayers() == lobby.getNumOfPlayers()) {
+        gameHostServer.startGame(lobby);
+      }
     } else {
-      send("JOIN_FAILURE");
+      send(joinMessage);
       send("Unable to connect to lobby number: " + joinMessage.getUniqueLobbyNumber());
     }
   }
 
   private void processMoveMessage(Message msg) {
     MoveMessage moveMessage = (MoveMessage) msg;
-    String move = moveMessage.toString();
-    move = move + " from player number" + playerIndex;
-    gameHostServer.sendToAllInLobby(move, this.lobby, this);
+    moveMessage.setPlayerIndex(playerIndex);
+    if (lobby.isGameStarted()) {
+      try {
+        lobby.receiveMove(moveMessage.getMove(), playerIndex);
+        moveMessage.setAccepted(true);
+        send(moveMessage);
+        gameHostServer.sendToAllInLobby(moveMessage, lobby, this);
+      } catch (IllegalMoveException e) {
+        moveMessage.setAccepted(false);
+        send(moveMessage);
+      }
+    } else {
+      send("Game not started");
+    }
   }
 
   private void processQuitMessage(Message msg) {

@@ -1,9 +1,10 @@
 package pwr.tp.utilityClases;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class Pair <F extends Comparable<F>,S extends Comparable<S>> implements Comparable {
+public class Pair <F extends Comparable<F>,S extends Comparable<S>> implements Comparable, Serializable {
     private final F first;
     private final S second;
     public Pair(F f, S s) {

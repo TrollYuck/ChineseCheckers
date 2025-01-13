@@ -2,6 +2,9 @@ package pwr.tp.client.GUI;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -16,11 +19,14 @@ import pwr.tp.game.Lobby;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientMainViewController {
 
   private final MIMGui mim = new MIMGui(this); //man in the middle so this class isn't too big
   private List<String> lobbies;
+  private int selectedLobbyId = -1;
 
   public Button CreateGameButton;
   public Button JoinGameButton;
@@ -95,14 +101,62 @@ public class ClientMainViewController {
   public void addAvailableGames() {
     if (lobbies != null) {
       VBox vbox = new VBox();
+      Pattern pattern = Pattern.compile("ID: (\\d+),");
       for (String lobby : lobbies) {
+
         TextArea lobbyInfo = new TextArea(lobby);
         lobbyInfo.setPrefHeight(30);
         lobbyInfo.setPrefWidth(390);
         lobbyInfo.setEditable(false);
+        lobbyInfo.setOnMouseClicked(event -> {
+          Matcher matcher = pattern.matcher(lobby);
+          if (matcher.find()) {
+            selectedLobbyId = Integer.parseInt(matcher.group(1));
+          } else {
+            selectedLobbyId = -1;
+            System.out.println("No lobby selected");
+          }
+        });
         vbox.getChildren().add(lobbyInfo);
       }
       AvailableGamesScrollPane.setContent(vbox);
+    }
+  }
+
+  private void waitForInGame() throws InterruptedException {
+    int retries = 10;
+    while (!mim.isInGame() && retries > 0) {
+      Thread.sleep(500); // Wait for 500 milliseconds
+      retries--;
+    }
+  }
+
+  public void joinGame() {
+    try {
+      if (selectedLobbyId >= 0) {
+        mim.joinGame(selectedLobbyId);
+        //waitForInGame();
+        Platform.runLater(() -> {
+          try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/InGameView.fxml"));
+            Parent root = loader.load();
+
+            InGameViewController controller = loader.getController();
+            controller.setupInGameView(mim);
+
+            Stage stage = (Stage) ClientMainView.getScene().getWindow();
+            stage.setScene(new Scene(root));
+          } catch (IOException e) {
+            ErrorPopUpUtil.showErrorPopUp("Failed to load InGameView.fxml: " + e.getMessage());
+            e.printStackTrace();
+          }
+        });
+      } else {
+        ErrorPopUpUtil.showErrorPopUp("No lobby selected");
+      }
+    } catch (Exception e) {
+      ErrorPopUpUtil.showErrorPopUp("An error occurred while joining the game");
+      e.printStackTrace();
     }
   }
 
