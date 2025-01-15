@@ -1,7 +1,6 @@
 package pwr.tp.server;
 
 import pwr.tp.game.Lobby;
-import pwr.tp.gameplay.IllegalMoveException;
 import pwr.tp.server.messages.*;
 
 import java.io.IOException;
@@ -13,15 +12,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Handles client connections and processes messages from clients.
+ */
 public class  ClientHandler implements Runnable {
 
+  /**
+   * The client socket for communication.
+   */
   private final Socket clientSocket;
+
+  /**
+   * The game host server managing the game.
+   */
   private final GameHostServer gameHostServer;
+
+  /**
+   * The output stream to send data to the client.
+   */
   private ObjectOutputStream out;
+
+  /**
+   * The input stream to receive data from the client.
+   */
   private ObjectInputStream in;
+
+  /**
+   * The lobby the client is part of.
+   */
   private Lobby lobby;
+
+  /**
+   * The index of the player.
+   */
   private final int playerIndex;
 
+    /**
+     * Constructs a ClientHandler with the specified client socket, game host server, and player index.
+     *
+     * @param clientSocket the client socket
+     * @param gameHostServer the game host server
+     * @param playerIndex the index of the player
+     */
     public ClientHandler(Socket clientSocket, GameHostServer gameHostServer, int playerIndex) {
         this.clientSocket = clientSocket;
         this.gameHostServer = gameHostServer;
@@ -35,6 +67,9 @@ public class  ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Runs the client handler, continuously reading and processing messages from the client.
+     */
   @Override
   public void run() {
     try {
@@ -49,6 +84,11 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Processes the received message based on its type.
+     *
+     * @param msg the message to process
+     */
   private void processMessage(Message msg) {
     switch (msg.getType()) {
       case JOIN:
@@ -83,6 +123,11 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Processes an UpdatePawnsMessage.
+     *
+     * @param msg the message to process
+     */
   private void processUpdatePawnsMessage(Message msg) {
     if (lobby.isGameStarted()) {
       UpdatePawnsMessage updatePawnsMessage = (UpdatePawnsMessage) msg;
@@ -93,6 +138,11 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Processes a CreateGameMessage.
+     *
+     * @param msg the message to process
+     */
   private void processCreateGameMessage(Message msg) {
     CreateGameMessage createGameMessage = (CreateGameMessage) msg;
     if (gameHostServer.createLobby(createGameMessage.getNumOfPlayers(), createGameMessage.getBoardType(), this)) {
@@ -102,6 +152,11 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Processes a JoinMessage.
+     *
+     * @param msg the message to process
+     */
   private void processJoinMessage(Message msg) {
     JoinMessage joinMessage = (JoinMessage) msg;
     if (gameHostServer.joinLobby(this, joinMessage.getUniqueLobbyNumber()) && this.lobby != null) {
@@ -118,6 +173,11 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Processes a MoveMessage.
+     *
+     * @param msg the message to process
+     */
   private void processMoveMessage(Message msg) {
     MoveMessage moveMessage = (MoveMessage) msg;
     moveMessage.setPlayerIndex(playerIndex);
@@ -135,15 +195,28 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Processes a QuitMessage.
+     *
+     * @param msg the message to process
+     */
   private void processQuitMessage(Message msg) {
     gameHostServer.removeClient(this);
     close();
   }
 
+    /**
+     * Processes a DisconnectGameMessage.
+     */
   private void processDisconnectGameMessage() {
     gameHostServer.quitLobby(this);
   }
 
+    /**
+     * Sends an object to the client.
+     *
+     * @param object the object to send
+     */
   public void send(Object object) {
     try {
       out.writeObject(object);
@@ -153,6 +226,9 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Closes the client connection.
+     */
   private void close() {
     try {
       in.close();
@@ -163,18 +239,30 @@ public class  ClientHandler implements Runnable {
     }
   }
 
+    /**
+     * Returns the player index.
+     *
+     * @return the player index
+     */
   public int getPlayerIndex() {
       return playerIndex;
   }
 
+    /**
+     * Returns the lobby.
+     *
+     * @return the lobby
+     */
   public Lobby getLobby() {
       return lobby;
   }
 
+    /**
+     * Adds a lobby to the client handler.
+     *
+     * @param lobby the lobby to add
+     */
   public void addLobby(Lobby lobby) {
       this.lobby = lobby;
   }
-
-
-
 }

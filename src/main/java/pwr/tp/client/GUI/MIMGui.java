@@ -10,23 +10,72 @@ import java.net.SocketException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The MIMGui class handles the communication between the client and the server.
+ * It manages the connection, sending and receiving messages, and updating the client view.
+ */
 public class MIMGui {
+  /**
+   * The main view controller of the client.
+   */
   private final ClientMainViewController clientMainViewController;
+
+  /**
+   * The in-game view controller.
+   */
   private InGameViewController inGameViewController;
 
+  /**
+   * The socket used for communication with the server.
+   */
   private Socket socket;
+
+  /**
+   * The output stream for sending objects to the server.
+   */
   private ObjectOutputStream objectOutputStream;
+
+  /**
+   * The input stream for receiving objects from the server.
+   */
   private ObjectInputStream objectInputStream;
+
+  /**
+   * The scanner for reading input from the console.
+   */
   private Scanner scannerIn;
 
+  /**
+   * The index of the player.
+   */
   private int playerIndex;
+
+  /**
+   * Indicates whether the client is running.
+   */
   private boolean running = false;
+
+  /**
+   * Indicates whether the client is in a game.
+   */
   private boolean inGame = false;
 
+  /**
+   * Constructs a MIMGui object with the specified ClientMainViewController.
+   *
+   * @param clientMainViewController the main view controller of the client
+   */
   public MIMGui(ClientMainViewController clientMainViewController) {
     this.clientMainViewController = clientMainViewController;
   }
 
+  /**
+   * Starts the connection to the server and begins receiving messages.
+   *
+   * @param host the server host
+   * @param port the server port
+   * @throws IOException if an I/O error occurs when connecting
+   */
   public void start(String host, int port) throws IOException {
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       if (running) {
@@ -38,6 +87,13 @@ public class MIMGui {
     receiveThread.start();
   }
 
+  /**
+   * Connects to the server with the specified host and port.
+   *
+   * @param host the server host
+   * @param port the server port
+   * @throws IOException if an I/O error occurs when connecting
+   */
   private void connect(String host, int port) throws IOException {
     socket = new Socket(host, port);
     objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -46,6 +102,11 @@ public class MIMGui {
     running = true;
   }
 
+  /**
+   * Closes the connection and all associated streams.
+   *
+   * @throws IOException if an I/O error occurs when closing
+   */
   public synchronized void close() throws IOException {
     if (objectOutputStream != null) {
       objectOutputStream.close();
@@ -61,6 +122,9 @@ public class MIMGui {
     }
   }
 
+  /**
+   * Receives messages from the server and processes them.
+   */
   private void receiveMessages() {
     try {
       while (running) {
@@ -117,6 +181,11 @@ public class MIMGui {
     }
   }
 
+  /**
+   * Sends a message to the server.
+   *
+   * @param message the message to send
+   */
   private synchronized void send(Object message) {
     try {
       objectOutputStream.writeObject(message);
@@ -128,10 +197,21 @@ public class MIMGui {
     }
   }
 
+  /**
+   * Sends a request to the server to create a game.
+   *
+   * @param players  the number of players
+   * @param gameType the type of the game
+   */
   public void createGame(int players, String gameType) {
     send(new CreateGameMessage(players, gameType));
   }
 
+  /**
+   * Quits the game and closes the connection.
+   *
+   * @throws IOException if an I/O error occurs when closing
+   */
   public void quitGame() throws IOException {
     running = false;
     if (socket != null && !socket.isClosed()) {
@@ -140,22 +220,43 @@ public class MIMGui {
     close();
   }
 
+  /**
+   * Sends a request to the server to list available games.
+   */
   public void listGames() {
       send(new ListGamesMessage(null));
   }
 
+  /**
+   * Sends a request to the server to join a game.
+   *
+   * @param lobbyId the ID of the lobby to join
+   */
   public void joinGame(int lobbyId) {
     send(new JoinMessage(lobbyId));
   }
 
+  /**
+   * Checks if the client is in a game.
+   *
+   * @return true if the client is in a game, false otherwise
+   */
   public boolean isInGame() {
     return inGame;
   }
 
+  /**
+   * Sends a request to the server to update the pawns.
+   */
   public void updateMyPawnsRequest() {
     send(new UpdatePawnsMessage());
   }
 
+  /**
+   * Processes the UpdatePawnsMessage received from the server.
+   *
+   * @param updatePawnsMessage the message containing the updated pawns
+   */
   public void processUpdatePawnsMessage(UpdatePawnsMessage updatePawnsMessage) {
       if (inGameViewController != null) {
         inGameViewController.clearLobbyInfo();
@@ -165,14 +266,32 @@ public class MIMGui {
       }
   }
 
+  /**
+   * Sets the InGameViewController for this MIMGui.
+   *
+   * @param inGameViewController the in-game view controller
+   */
   public void setInGameViewController(InGameViewController inGameViewController) {
     this.inGameViewController = inGameViewController;
   }
 
+  /**
+   * Sends a move message to the server.
+   *
+   * @param x1 the starting x-coordinate
+   * @param y1 the starting y-coordinate
+   * @param x2 the ending x-coordinate
+   * @param y2 the ending y-coordinate
+   */
   public void sendMove(int x1, int y1, int x2, int y2) {
     send(new MoveMessage(x1, y1, x2, y2));
   }
 
+  /**
+   * Processes the MoveMessage received from the server.
+   *
+   * @param moveMessage the message containing the move information
+   */
   public void processMoveMessage(MoveMessage moveMessage) {
     if (inGameViewController != null) {
       if (moveMessage.isAccepted()) {
@@ -186,6 +305,4 @@ public class MIMGui {
       }
     }
   }
-
-
 }

@@ -5,7 +5,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Utility class for displaying error pop-ups.
+ */
 public class ErrorPopUpUtil {
+
+  /**
+   * Displays an error pop-up with the specified message.
+   *
+   * @param message the error message to display
+   */
   public static void showErrorPopUp(String message) {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(ErrorPopUpUtil.class.getResource("/ErrorPopUp.fxml"));

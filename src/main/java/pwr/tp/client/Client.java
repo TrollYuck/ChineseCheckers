@@ -7,9 +7,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * The Client class represents a client that connects to the GameHostServer.
+ * It handles user input, sends messages to the server, and processes messages from the server.
+ */
 public class Client {
   private Socket socket;
   private ObjectOutputStream objectOutputStream;
@@ -18,7 +21,14 @@ public class Client {
   private boolean running = false;
   private boolean inGame = false;
 
-  public Client(String host, int port) throws Exception {
+  /**
+   * Constructs a Client and connects to the specified host and port.
+   *
+   * @param host the server host
+   * @param port the server port
+   *
+   */
+  public Client(String host, int port) {
     try {
       Runtime.getRuntime().addShutdownHook(new Thread(() -> {
         if (running) {
@@ -34,6 +44,9 @@ public class Client {
     }
   }
 
+  /**
+   * Handles user input from the console.
+   */
   private void handleUserInput() {
     label:
     while (running) {
@@ -90,6 +103,11 @@ public class Client {
     processQuitMessage();
   }
 
+  /**
+   * Processes the join game message.
+   *
+   * @param input the game id input
+   */
   private void processJoinMessage(String input) {
     try {
       int gameId = Integer.parseInt(input);
@@ -99,6 +117,11 @@ public class Client {
     }
   }
 
+  /**
+   * Processes the creates game message.
+   *
+   * @param input the number of players and board type input
+   */
   private void processCreateGameMessage(String input) {
     try {
       String[] gameInfo = input.trim().split(";");
@@ -117,6 +140,11 @@ public class Client {
     }
   }
 
+  /**
+   * Processes the move message.
+   *
+   * @param message the move input
+   */
   private void processMoveMessage(String message) {
     try {
       String[] coords = message.trim().split(";");
@@ -147,6 +175,9 @@ public class Client {
     }
   }
 
+  /**
+   * Processes the quit message.
+   */
   private void processQuitMessage() {
     running = false;
     if (!socket.isClosed()) {
@@ -155,6 +186,9 @@ public class Client {
     close();
   }
 
+  /**
+   * Receives messages from the server.
+   */
   private void receiveMessages() {
     try {
     while (running) {
@@ -174,6 +208,11 @@ public class Client {
     }
   }
 
+  /**
+   * Sends a message to the server.
+   *
+   * @param message the message to send
+   */
   private synchronized void send(Object message) {
     try {
       objectOutputStream.writeObject(message);
@@ -185,6 +224,12 @@ public class Client {
     }
   }
 
+  /**
+   * Connects to the server.
+   *
+   * @param host the server host
+   * @param port the server port
+   */
   private void connect(String host, int port) {
       try {
           socket = new Socket(host, port);
@@ -199,11 +244,17 @@ public class Client {
       }
   }
 
+  /**
+   * Processes the disconnect message.
+   */
   private void processDisconnectMessage() {
     inGame = false;
     send(new DisconnectGameMessage());
   }
 
+  /**
+   * Closes the client connection and resources.
+   */
   public synchronized void close() {
     try {
       if (objectOutputStream != null) {
@@ -225,13 +276,16 @@ public class Client {
     }
   }
 
+  /**
+   * The main method to start the client.
+   *
+   * @param args the command line arguments
+   */
   public static void main(String[] args) {
       try {
           new Client("localhost", 12345);
       } catch (Exception e) {
-        System.out.println("Server not found");;
+        System.out.println("Server not found");
       }
   }
-
-
 }
