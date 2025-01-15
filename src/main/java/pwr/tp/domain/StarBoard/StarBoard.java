@@ -29,6 +29,11 @@ public class StarBoard implements Board {
     public List<Stripe> getStripes() {
         return stripes;
     }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
     @Override
     public void receiveMove(Move Move) {
 

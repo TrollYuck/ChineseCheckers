@@ -3,11 +3,12 @@ package pwr.tp.domain;
 import pwr.tp.utilityClases.Pair;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 public class Field implements Comparable {
     Pair<Integer, Integer> coordinates;
     private boolean isEmpty = true;
-    private int whichPlayersPawn = 0;
+    private int whichPlayersPawn = -1;
 
     public Field(Pair<Integer, Integer> pair) {
         coordinates = pair;
@@ -44,7 +45,13 @@ public class Field implements Comparable {
 
     @Override
     public boolean equals(Object o) {
-        Field object = (Field) o;
-        return object.coordinates.equals(this.coordinates);
+        if (this == o) return true;
+        if (!(o instanceof Field field)) return false;
+        return Objects.equals(coordinates, field.coordinates);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(coordinates);
     }
 }

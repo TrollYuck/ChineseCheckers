@@ -1,5 +1,6 @@
 package pwr.tp.movement;
 
+import pwr.tp.domain.Board;
 import pwr.tp.domain.Field;
 import pwr.tp.domain.StarBoard.Stripe;
 import pwr.tp.utilityClases.Pair;
@@ -26,8 +27,15 @@ public class Move {
     public static boolean isMoveLegal(Move move, List<Stripe> stripeList) {
         List<Field> visited = new ArrayList<>();
         List<Field> queue = new ArrayList<>();
+
         queue.add(new Field(move.initialPosition));
         while(!queue.isEmpty()) {
+
+            for(Stripe stripe: stripeList) {
+                for(Field field: stripe.getFieldsInRow()) {
+                    System.out.println(field + " " + field.isEmpty());
+                }
+            }
 
             Pair<Integer, Integer> coordinates = queue.getFirst().getCoordinates();
             if(coordinates.equals(move.finalPosition)) {
@@ -74,15 +82,22 @@ public class Move {
                         fields.add(field);
                         return fields;
                     }
+                    System.out.println("weird state");
+                    System.out.println(field.isEmpty());
                 } else if(field.isEmpty() && state == 0) {
                     visited.add(field);
+                    fields.add(field);
                     state = 1;
+                    System.out.println("state 0 and field empty" );
                 } else if(field.isEmpty() && state == 1) {
+                    System.out.println("state 1 and field empty" + field);
                     break;
                 } else if(!field.isEmpty() && state == 0) {
+                    System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
                     state = 0;
+                    System.out.println("state 1 and field not empty");
                 }
             }
 
@@ -96,13 +111,16 @@ public class Move {
                         return fields;
                     }
                 } else if(field.isEmpty() && state == 0) {
+                    System.out.println("aaa");
                     visited.add(field);
+                    fields.add(field);
                     state = 1;
                 } else if(field.isEmpty() && state == 1) {
                     break;
                 } else if(!field.isEmpty() && state == 0) {
                     break;
                 } else if(!field.isEmpty() && state == 1) {
+                    System.out.println(field + "vbvb");
                     state = 0;
                 }
             }

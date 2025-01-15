@@ -25,7 +25,7 @@ public class Pair <F extends Comparable<F>,S extends Comparable<S>> implements C
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pair<?, ?> pair = (Pair<?, ?>) o;
-        return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
+        return pair.first.equals(first) && pair.second.equals(second);
     }
 
     @Override

@@ -14,4 +14,5 @@ public interface Board {
     String getName();
     List<Stripe> getStripes();
     Field findFieldByCoordinates(Pair<Integer, Integer> coordinates);
+    List<Field> getFields();
 }

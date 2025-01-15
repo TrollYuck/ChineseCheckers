@@ -12,11 +12,11 @@ public class debugger {
         StarBoard starBoard = new StarBoard();
         Lobby lobby = new Lobby(6, starBoard);
         lobby.startGame();
-        for(Stripe stripe: starBoard.getStripes()) {
-            System.out.println(stripe.getFieldsInRow());
+        for(Field field: starBoard.getFields()) {
+            System.out.println(field + " " + field.isEmpty());
         }
         try{
-            lobby.receiveMove(new Move(new Pair<>(4, 1), new Pair<>(5,5)), 0);
+            lobby.receiveMove(new Move(new Pair<>(3, 1), new Pair<>(5,5)), 0);
             System.out.println(lobby.getPawnsFromPlayer(0));
         } catch (IllegalMoveException e) {
             System.out.println("illegal move");
