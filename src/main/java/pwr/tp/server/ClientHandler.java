@@ -47,6 +47,8 @@ public class  ClientHandler implements Runnable {
    */
   private final int playerIndex;
 
+  private int lobbyPlayerIndex;
+
     /**
      * Constructs a ClientHandler with the specified client socket, game host server, and player index.
      *
@@ -131,7 +133,7 @@ public class  ClientHandler implements Runnable {
   private void processUpdatePawnsMessage(Message msg) {
     if (lobby.isGameStarted()) {
       UpdatePawnsMessage updatePawnsMessage = (UpdatePawnsMessage) msg;
-      updatePawnsMessage.setPawns(lobby.getPawnsFromPlayer(playerIndex));
+      updatePawnsMessage.setPawns(lobby.getPawnsFromPlayer(lobbyPlayerIndex));
       send(updatePawnsMessage);
     } else {
       send("Game not started, cannot update pawns");
@@ -160,7 +162,8 @@ public class  ClientHandler implements Runnable {
   private void processJoinMessage(Message msg) {
     JoinMessage joinMessage = (JoinMessage) msg;
     if (gameHostServer.joinLobby(this, joinMessage.getUniqueLobbyNumber()) && this.lobby != null) {
-      joinMessage.setPlayerIndex(playerIndex);
+      lobbyPlayerIndex = lobby.getCurrentNumOfPlayers() - 1;
+      joinMessage.setPlayerIndex(lobbyPlayerIndex);
       joinMessage.setAccepted(true);
       send(joinMessage);
       send("Connected to lobby number: " + joinMessage.getUniqueLobbyNumber());
@@ -180,9 +183,9 @@ public class  ClientHandler implements Runnable {
      */
   private void processMoveMessage(Message msg) {
     MoveMessage moveMessage = (MoveMessage) msg;
-    moveMessage.setPlayerIndex(playerIndex);
+    moveMessage.setPlayerIndex(lobbyPlayerIndex);
     if (lobby.isGameStarted()) {
-      if (lobby.receiveMove(moveMessage.getMove(), playerIndex)) {
+      if (lobby.receiveMove(moveMessage.getMove(), lobbyPlayerIndex)) {
         moveMessage.setAccepted(true);
         send(moveMessage);
         gameHostServer.sendToAllInLobby(moveMessage, lobby, this);
@@ -249,6 +252,10 @@ public class  ClientHandler implements Runnable {
      */
   public int getPlayerIndex() {
       return playerIndex;
+  }
+
+  public int getLobbyPlayerIndex() {
+    return lobbyPlayerIndex;
   }
 
     /**

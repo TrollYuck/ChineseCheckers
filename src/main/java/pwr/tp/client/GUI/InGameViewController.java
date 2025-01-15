@@ -45,6 +45,8 @@ public class InGameViewController {
    */
   public Button DisconnectButton;
 
+  public Button RefreshButton;
+
   /**
    * TextArea to display the player's pawns information.
    */
@@ -123,5 +125,9 @@ public class InGameViewController {
 
   public BorderPane getInGameBorderPane() {
     return InGameBorderPane;
+  }
+
+  public void refresh() {
+      mim.updateMyPawnsRequest();
   }
 }
