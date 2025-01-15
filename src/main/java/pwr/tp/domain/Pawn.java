@@ -7,4 +7,8 @@ public class Pawn {
     public Pawn(Field field) {
         this.location = field;
     }
+
+    public String toString() {
+        return location.toString();
+    }
 }

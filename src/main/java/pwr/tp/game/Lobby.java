@@ -63,6 +63,12 @@ public class Lobby  {
         return currentGame != null;
     }
 
+    public int getIndexOfWinner() {
+        //TODO: implement (if game winner hasn't been decided yet, indexOfWinner = -1)
+        ///return currentGame.getIndexOfWinner();
+        return 0;
+    }
+
     @Override
     public String toString() {
         return "ID: " + uniqueLobbyNumber + ", board type: "+ board.getName() +
