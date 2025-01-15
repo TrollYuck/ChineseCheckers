@@ -5,9 +5,7 @@ import pwr.tp.domain.StarBoard.Stripe;
 import pwr.tp.utilityClases.Pair;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Move {
     Pair<Integer, Integer> initialPosition, finalPosition;
@@ -26,16 +24,23 @@ public class Move {
     }
 
     public static boolean isMoveLegal(Move move, List<Stripe> stripeList) {
+        List<Field> visited = new ArrayList<>();
         List<Field> queue = new ArrayList<>();
         queue.add(new Field(move.initialPosition));
         while(!queue.isEmpty()) {
+
             Pair<Integer, Integer> coordinates = queue.getFirst().getCoordinates();
-            queue.removeFirst();
             if(coordinates.equals(move.finalPosition)) {
                 return true;
             }
+            if(visited.contains(new Field(coordinates))) {
+                continue;
+            } else {
+                visited.add(new Field(coordinates));
+            }
+            queue.removeFirst();
             List<Stripe> appropriateStripes = findStripes(coordinates, stripeList);
-            queue.addAll(checkingOutPossibleFieldsToMove(appropriateStripes, coordinates));
+            queue.addAll(checkingOutPossibleFieldsToMove(appropriateStripes, coordinates, move, visited));
         }
         return false;
     }
@@ -49,28 +54,61 @@ public class Move {
                 }
             }
         }
+        for(Stripe stripe: result) {
+            System.out.println("stripes " + stripe.getFieldsInRow());
+        }
         return result;
     }
 
-    private static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates) {
+    private static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates, Move move, List<Field> visited) {
         List<Field> fields = new ArrayList<>();
         for(Stripe stripe: stripeList) {
-            int state = -1;
-            int idx = stripe.getFieldsInRow().indexOf(coordinates);
+            int state = 1;
+            int idx = stripe.getFieldsInRow().indexOf(new Field(coordinates));
             for(int i = idx + 1; i < stripe.getFieldsInRow().size(); i++) {
-                if(stripe.getFieldsInRow().get(idx).isEmpty() && state != 1) {
-                    fields.add(stripe.getFieldsInRow().get(idx));
+                Field field = stripe.getFieldsInRow().get(i);
+                System.out.println(field);
+                if(idx + 1 == i && coordinates.equals(move.initialPosition) && field.isEmpty()) {
+                    if(move.finalPosition.equals(field.getCoordinates())) {
+                        visited.add(field);
+                        fields.add(field);
+                        return fields;
+                    }
+                } else if(field.isEmpty() && state == 0) {
+                    visited.add(field);
                     state = 1;
-                } else if(stripe.getFieldsInRow().get(idx).isEmpty() && state == 1) {
+                } else if(field.isEmpty() && state == 1) {
                     break;
-                } else if(!stripe.getFieldsInRow().get(idx).isEmpty() && state != 0) {
+                } else if(!field.isEmpty() && state == 0) {
+                    break;
+                } else if(!field.isEmpty() && state == 1) {
                     state = 0;
-                } else if(!stripe.getFieldsInRow().get(idx).isEmpty() && state == 0) {
-                    break;
                 }
             }
-        }
 
+            for(int i = idx - 1; i >= 0; i--) {
+                Field field = stripe.getFieldsInRow().get(i);
+                System.out.println(field);
+                if(idx - 1 == i && coordinates.equals(move.initialPosition) && field.isEmpty()) {
+                    if(move.finalPosition.equals(field.getCoordinates())) {
+                        visited.add(field);
+                        fields.add(field);
+                        return fields;
+                    }
+                } else if(field.isEmpty() && state == 0) {
+                    visited.add(field);
+                    state = 1;
+                } else if(field.isEmpty() && state == 1) {
+                    break;
+                } else if(!field.isEmpty() && state == 0) {
+                    break;
+                } else if(!field.isEmpty() && state == 1) {
+                    state = 0;
+                }
+            }
+
+        }
+        System.out.println("fields " + fields);
         return fields;
     }
 

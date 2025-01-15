@@ -43,6 +43,15 @@ public class StarBoard implements Board {
         return "Star Board";
     }
 
+    public Field findFieldByCoordinates(Pair<Integer, Integer> coordinates) {
+        for(Field field: fields) {
+            if(field.getCoordinates().equals(coordinates)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
     private void fillBoardWithFields() {
         for (int i = 1; i < 5; i++) {
             for (int j = 1; j < i + 1; j++) {
