@@ -115,7 +115,7 @@ public class  ClientHandler implements Runnable {
         processUpdatePawnsMessage(msg);
         break;
       case DISCONNECT_GAME:
-        processDisconnectGameMessage();
+        processDisconnectGameMessage(msg);
         break;
       default:
         send("Unknown message type");
@@ -208,8 +208,11 @@ public class  ClientHandler implements Runnable {
     /**
      * Processes a DisconnectGameMessage.
      */
-  private void processDisconnectGameMessage() {
+  private void processDisconnectGameMessage(Message msg) {
     gameHostServer.quitLobby(this);
+    DisconnectGameMessage disconnectGameMessage = (DisconnectGameMessage) msg;
+    disconnectGameMessage.setDisconnected(true);
+    send(disconnectGameMessage);
   }
 
     /**

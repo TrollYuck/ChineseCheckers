@@ -8,6 +8,7 @@ public class DisconnectGameMessage implements Message {
    * The type of the message.
    */
   private final MessageType type = MessageType.DISCONNECT_GAME;
+  private boolean disconnected = false;
 
   /**
    * Returns the type of the message.
@@ -17,5 +18,13 @@ public class DisconnectGameMessage implements Message {
   @Override
   public MessageType getType() {
     return type;
+  }
+
+  public boolean isDisconnected() {
+      return disconnected;
+  }
+
+  public void setDisconnected(boolean disconnected) {
+      this.disconnected = disconnected;
   }
 }

@@ -153,6 +153,12 @@ public class MIMGui {
               UpdatePawnsMessage updatePawnsMessage = (UpdatePawnsMessage) msg;
               processUpdatePawnsMessage(updatePawnsMessage);
               break;
+            case DISCONNECT_GAME:
+              DisconnectGameMessage disconnectGameMessage = (DisconnectGameMessage) msg;
+              if (disconnectGameMessage.isDisconnected()) {
+                inGame = false;
+              }
+              break;
             default:
               break;
           }
@@ -259,9 +265,9 @@ public class MIMGui {
    */
   public void processUpdatePawnsMessage(UpdatePawnsMessage updatePawnsMessage) {
       if (inGameViewController != null) {
-        inGameViewController.clearLobbyInfo();
+        inGameViewController.clearPlayerPawns();
         for (String pawn : updatePawnsMessage.getPawns()) {
-          inGameViewController.addLobbyInfo(pawn);
+          inGameViewController.addPlayerPawns(pawn);
         }
       }
   }
@@ -304,5 +310,9 @@ public class MIMGui {
         inGameViewController.addLobbyInfo("Illegal move: " + moveMessage);
       }
     }
+  }
+
+  public void disconnect() {
+      send(new DisconnectGameMessage());
   }
 }

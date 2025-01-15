@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pwr.tp.client.GUI.InGameViewController">
+<BorderPane fx:id="InGameBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pwr.tp.client.GUI.InGameViewController">
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
          <children>
@@ -32,12 +32,12 @@
                   <Font name="System Italic" size="12.0" />
                </font>
             </TextField>
-            <Button fx:id="ConfirmMoveButton" onAction="#confirmMove" mnemonicParsing="false" style="-fx-border-color: green; -fx-background-color: lime;" text="Move">
+            <Button fx:id="ConfirmMoveButton" mnemonicParsing="false" onAction="#confirmMove" style="-fx-border-color: green; -fx-background-color: lime;" text="Move">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="DisconnectButton" mnemonicParsing="false" style="-fx-border-color: darkred; -fx-background-color: crimson; -fx-font-weight: bold; -fx-effect: dropshadow( gaussian , black , 20.82 , 0.25 , 0.0 , 0.0 );" text="Disconnect" textFill="WHITE" />
+            <Button fx:id="DisconnectButton" mnemonicParsing="false" onAction="#disconnect" style="-fx-border-color: darkred; -fx-background-color: crimson; -fx-font-weight: bold; -fx-effect: dropshadow( gaussian , black , 20.82 , 0.25 , 0.0 , 0.0 );" text="Disconnect" textFill="WHITE" />
          </children>
       </HBox>
    </bottom>
@@ -51,7 +51,7 @@
                         <Font name="System Bold Italic" size="12.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="PlayerPawnsTextField" prefHeight="300.0" prefWidth="210.0" promptText="Your paws will be displayed here" />
+                  <TextArea fx:id="PlayerPawnsTextField" editable="false" prefHeight="300.0" prefWidth="210.0" promptText="Your paws will be displayed here" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="402.0">
@@ -61,7 +61,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="LobbyInfoTextField" prefHeight="300.0" prefWidth="390.0" promptText="Lobby info here" />
+                  <TextArea fx:id="LobbyInfoTextField" editable="false" prefHeight="300.0" prefWidth="390.0" promptText="Lobby info here" />
                </children>
             </VBox>
          </children>

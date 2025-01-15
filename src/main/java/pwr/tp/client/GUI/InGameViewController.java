@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 
 /**
  * Controller class for the in-game view.
@@ -11,6 +12,8 @@ import javafx.scene.control.TextField;
 public class InGameViewController {
 
   private MIMGui mim;
+
+  public BorderPane InGameBorderPane;
 
   /**
    * TextField for the starting x-coordinate of the move.
@@ -109,5 +112,16 @@ public class InGameViewController {
     } catch (NumberFormatException e) {
       ErrorPopUpUtil.showErrorPopUp("Invalid input");
     }
+  }
+
+  /**
+   * Disconnects from the game.
+   */
+  public void disconnect() {
+    mim.disconnect();
+  }
+
+  public BorderPane getInGameBorderPane() {
+    return InGameBorderPane;
   }
 }

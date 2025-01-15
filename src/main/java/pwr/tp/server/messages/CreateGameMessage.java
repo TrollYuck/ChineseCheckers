@@ -4,8 +4,19 @@ package pwr.tp.server.messages;
  * Represents a message to create a game.
  */
 public class CreateGameMessage implements Message {
+  /**
+   * The type of the message.
+   */
   private final MessageType type = MessageType.CREATE_GAME;
+
+  /**
+   * The number of players for the game.
+   */
   private final int numOfPlayers;
+
+  /**
+   * The type of the board for the game.
+   */
   private final String boardType;
 
   /**
