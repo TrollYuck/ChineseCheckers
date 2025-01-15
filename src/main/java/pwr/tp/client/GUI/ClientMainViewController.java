@@ -5,10 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -30,6 +27,30 @@ public class ClientMainViewController {
    * Instance of MIMGui to handle game logic and communication.
    */
   private final MIMGui mim = new MIMGui(this); //man in the middle so this class isn't too big
+  /**
+   * The menu bar for the client main view.
+   */
+  public javafx.scene.control.MenuBar MenuBar;
+
+  /**
+   * The file menu in the menu bar.
+   */
+  public Menu FileMenu;
+
+  /**
+   * The menu item to close the application.
+   */
+  public MenuItem CloseMenuItem;
+
+  /**
+   * The help menu in the menu bar.
+   */
+  public Menu HelpMenu;
+
+  /**
+   * The menu item to show the about window.
+   */
+  public MenuItem AboutMenuItem;
 
   /**
    * List of available lobbies.
@@ -262,6 +283,26 @@ public class ClientMainViewController {
     clearAvailableGames();
     mim.listGames();
     addAvailableGames();
+  }
+
+  @FXML
+  public void showAboutWindow() {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/AboutWindow.fxml"));
+      Parent root = fxmlLoader.load();
+      Stage stage = new Stage();
+      stage.setTitle("About");
+      stage.setScene(new Scene(root));
+      stage.show();
+    } catch (IOException e) {
+      ErrorPopUpUtil.showErrorPopUp("Failed to load AboutWindow.fxml: " + e.getMessage());
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
+  public void closeApplication() {
+    Platform.exit();
   }
 
 

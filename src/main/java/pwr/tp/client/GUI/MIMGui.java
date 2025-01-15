@@ -77,11 +77,6 @@ public class MIMGui {
    * @throws IOException if an I/O error occurs when connecting
    */
   public void start(String host, int port) throws IOException {
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      if (running) {
-        //processQuitMessage();
-      }
-    }));
     connect(host, port);
     Thread receiveThread = new Thread(this::receiveMessages);
     receiveThread.start();

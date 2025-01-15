@@ -18,8 +18,8 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                <children>
-                  <Button fx:id="JoinGameButton" onAction="#joinGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-border-color: green; -fx-background-color: lime; -fx-font-weight: bold;" text="Join Game" />
-                  <Button fx:id="RefreshButton" onAction="#refreshButtonAction" mnemonicParsing="false" style="-fx-font-weight: bold 100; -fx-background-color: cornflowerblue; -fx-border-color: darkslateblue;" text="Refresh" textAlignment="CENTER" />
+                  <Button fx:id="JoinGameButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#joinGame" style="-fx-border-color: green; -fx-background-color: lime; -fx-font-weight: bold;" text="Join Game" />
+                  <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#refreshButtonAction" style="-fx-font-weight: bold 100; -fx-background-color: cornflowerblue; -fx-border-color: darkslateblue;" text="Refresh" textAlignment="CENTER" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -50,16 +50,16 @@
       </HBox>
    </bottom>
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar fx:id="MenuBar" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu fx:id="FileMenu" mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="CloseMenuItem" onAction="#closeApplication" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu fx:id="HelpMenu" mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="AboutMenuItem" onAction="#showAboutWindow" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>
