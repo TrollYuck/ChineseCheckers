@@ -158,4 +158,10 @@ public class Lobby  {
         return "ID: " + uniqueLobbyNumber + ", board type: "+ board.getName() +
                 " with " + currentNumOfPlayers + "/" + numOfPlayers + " players";
     }
+
+    public int getIndexOfWinner() {
+        //TODO: implement (if game winner hasn't been decided yet, indexOfWinner = -1)
+        ///return currentGame.getIndexOfWinner();
+        return 0;
+    }
 }
