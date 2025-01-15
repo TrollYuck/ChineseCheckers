@@ -15,9 +15,17 @@ public class debugger {
         for(Field field: starBoard.getFields()) {
             System.out.println(field + " " + field.isEmpty());
         }
+        for(Stripe stripe: starBoard.getStripes()) {
+            System.out.println(stripe.getFieldsInRow());
+
+        }
         try{
-            lobby.receiveMove(new Move(new Pair<>(3, 1), new Pair<>(5,5)), 0);
+            lobby.receiveMove(new Move(new Pair<>(3, 3), new Pair<>(5,9)), 0);
+            lobby.receiveMove(new Move(new Pair<>(15, 1), new Pair<>(13,5)), 1);
+
+
             System.out.println(lobby.getPawnsFromPlayer(0));
+            System.out.println(lobby.getPawnsFromPlayer(1));
         } catch (IllegalMoveException e) {
             System.out.println("illegal move");
         }

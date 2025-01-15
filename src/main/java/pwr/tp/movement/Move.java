@@ -31,13 +31,9 @@ public class Move {
         queue.add(new Field(move.initialPosition));
         while(!queue.isEmpty()) {
 
-            for(Stripe stripe: stripeList) {
-                for(Field field: stripe.getFieldsInRow()) {
-                    System.out.println(field + " " + field.isEmpty());
-                }
-            }
-
             Pair<Integer, Integer> coordinates = queue.getFirst().getCoordinates();
+            queue.removeFirst();
+            System.out.println(coordinates);
             if(coordinates.equals(move.finalPosition)) {
                 return true;
             }
@@ -46,7 +42,6 @@ public class Move {
             } else {
                 visited.add(new Field(coordinates));
             }
-            queue.removeFirst();
             List<Stripe> appropriateStripes = findStripes(coordinates, stripeList);
             queue.addAll(checkingOutPossibleFieldsToMove(appropriateStripes, coordinates, move, visited));
         }
@@ -63,7 +58,7 @@ public class Move {
             }
         }
         for(Stripe stripe: result) {
-            System.out.println("stripes " + stripe.getFieldsInRow());
+            System.out.println(stripe.getFieldsInRow());
         }
         return result;
     }
@@ -83,24 +78,24 @@ public class Move {
                         return fields;
                     }
                     System.out.println("weird state");
-                    System.out.println(field.isEmpty());
+                    //System.out.println(field.isEmpty());
                 } else if(field.isEmpty() && state == 0) {
+                    System.out.println("state 0 and field empty" );
                     visited.add(field);
                     fields.add(field);
                     state = 1;
-                    System.out.println("state 0 and field empty" );
                 } else if(field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field empty" + field);
+                    System.out.println("state 1 and field empty");
                     break;
                 } else if(!field.isEmpty() && state == 0) {
                     System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
-                    state = 0;
                     System.out.println("state 1 and field not empty");
+                    state = 0;
                 }
             }
-
+            state = 1;
             for(int i = idx - 1; i >= 0; i--) {
                 Field field = stripe.getFieldsInRow().get(i);
                 System.out.println(field);
@@ -110,23 +105,26 @@ public class Move {
                         fields.add(field);
                         return fields;
                     }
+                    System.out.println("weird state");
                 } else if(field.isEmpty() && state == 0) {
-                    System.out.println("aaa");
+                    System.out.println("state 0 and field empty");
                     visited.add(field);
                     fields.add(field);
                     state = 1;
                 } else if(field.isEmpty() && state == 1) {
+                    System.out.println("state 1 and field empty");
                     break;
                 } else if(!field.isEmpty() && state == 0) {
+                    System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
-                    System.out.println(field + "vbvb");
+                    System.out.println("state 1 and field not empty");
                     state = 0;
                 }
             }
 
         }
-        System.out.println("fields " + fields);
+        //System.out.println("fields " + fields);
         return fields;
     }
 

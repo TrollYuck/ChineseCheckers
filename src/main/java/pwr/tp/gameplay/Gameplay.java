@@ -211,7 +211,6 @@ public class Gameplay {
     }
 
     public void receiveMove(Move move, int playerIndex) throws IllegalMoveException {
-        System.out.println("Player index: " + playerIndex + " Current player index: " + currentPlayerIndex);
         if(playerIndex == currentPlayerIndex) {
             if(isMoveLegal(players.get(playerIndex), move)) {
                 movePawn(move, playerIndex);
