@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pwr.tp.client.GUI.BoardPreview.BoardPreview;
 
 import java.util.Objects;
 
@@ -27,6 +28,15 @@ public class MainGui extends Application {
     primaryStage.setResizable(false);
     primaryStage.show();
   }
+
+//  public void start(Stage primaryStage) throws Exception {
+//    BoardPreview boardPreview = new BoardPreview();
+//    boardPreview.initialize( 6);
+//    primaryStage.setTitle("Chinese Checkers");
+//    primaryStage.setScene(new Scene(boardPreview.PreviewPane));
+//    primaryStage.show();
+//
+//  }
 
   /**
    * The main method to launch the JavaFX application.

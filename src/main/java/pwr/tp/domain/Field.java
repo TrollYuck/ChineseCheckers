@@ -19,6 +19,14 @@ public class Field implements Comparable {
         return coordinates;
     }
 
+    public int getX() {
+        return coordinates.getFirst();
+    }
+
+    public int getY() {
+        return coordinates.getSecond();
+    }
+
     public String toString(){
         return coordinates.getFirst() + " " + coordinates.getSecond();
     }

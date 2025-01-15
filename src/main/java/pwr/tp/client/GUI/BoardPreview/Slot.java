@@ -16,10 +16,12 @@ public class Slot extends StackPane {
     setPrefSize(30, 30);
     circle = new Circle(15);
     circle.setFill(Color.web("#b1b1b1"));
+    circle.setStroke(Color.BLACK);
     SlotInfoText = new Text(x + "," + y);
     SlotInfoText.setStyle("-fx-font-weight: bold;");
     this.x = x;
     this.y = y;
+    getChildren().addAll(circle, SlotInfoText);
   }
 
   public int getX() {
@@ -54,5 +56,9 @@ public class Slot extends StackPane {
         circle.setFill(Color.web("#b1b1b1"));
         break;
     }
+  }
+
+  public void showSlotInfo() {
+    getChildren().addAll(circle, SlotInfoText);
   }
 }

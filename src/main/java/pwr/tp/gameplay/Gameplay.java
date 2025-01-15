@@ -232,6 +232,18 @@ public class Gameplay {
         return result;
     }
 
+    public List<List<String>> getAllPawnCoordinates() {
+        List<List<String>> result = new ArrayList<>();
+        for(Player player: players) {
+            List<String> playerPawns = new ArrayList<>();
+            for(Pawn pawn: player.getPawns()) {
+                playerPawns.add(pawn.toString());
+            }
+            result.add(playerPawns);
+        }
+        return result;
+    }
+
     private void movePawn(Move move, int playerIndex) {
         Field field = board.findFieldByCoordinates(move.getInitialPosition());
         Pawn pawn = players.get(playerIndex).findPawnByLocation(field);

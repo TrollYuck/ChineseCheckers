@@ -47,6 +47,8 @@ public class InGameViewController {
 
   public Button RefreshButton;
 
+  public Button ShowMapButton;
+
   /**
    * TextArea to display the player's pawns information.
    */
@@ -129,5 +131,9 @@ public class InGameViewController {
 
   public void refresh() {
       mim.updateMyPawnsRequest();
+  }
+
+  public void showMap() {
+      mim.showMap();
   }
 }

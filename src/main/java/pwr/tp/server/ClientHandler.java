@@ -116,6 +116,9 @@ public class  ClientHandler implements Runnable {
       case UPDATE_PAWNS:
         processUpdatePawnsMessage(msg);
         break;
+      case UPDATE_BOARD:
+          processUpdateBoardMessage(msg);
+          break;
       case DISCONNECT_GAME:
         processDisconnectGameMessage(msg);
         break;
@@ -218,6 +221,12 @@ public class  ClientHandler implements Runnable {
     send(disconnectGameMessage);
   }
 
+  private void processUpdateBoardMessage(Message msg) {
+    UpdateBoardMessage updateBoardMessage = (UpdateBoardMessage) msg;
+    updateBoardMessage.update(lobby.getAllPawnCoordinates(), lobby.getNumOfPlayers() );
+    send(updateBoardMessage);
+  }
+
     /**
      * Sends an object to the client.
      *
@@ -274,5 +283,11 @@ public class  ClientHandler implements Runnable {
      */
   public void addLobby(Lobby lobby) {
       this.lobby = lobby;
+  }
+
+  private void checkWinner() {
+    if (lobby.getIndexOfWinner() != -1) {
+      send(new EndGameMessage(lobby.getIndexOfWinner()));
+    }
   }
 }

@@ -1,5 +1,9 @@
 package pwr.tp.client.GUI;
 
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import pwr.tp.client.GUI.BoardPreview.BoardPreview;
 import pwr.tp.server.messages.*;
 
 import java.io.IOException;
@@ -24,6 +28,8 @@ public class MIMGui {
    * The in-game view controller.
    */
   private InGameViewController inGameViewController;
+
+  private BoardPreview boardPreview;
 
   /**
    * The socket used for communication with the server.
@@ -154,15 +160,21 @@ public class MIMGui {
                 inGame = false;
               }
               break;
+            case UPDATE_BOARD:
+              UpdateBoardMessage updateBoardMessage = (UpdateBoardMessage) msg;
+              List<List<String>> playersPawnPositions = updateBoardMessage.getPlayersPawnPositions();
+              int numberOfPlayers = updateBoardMessage.getNumberOfPlayers();
+              showMap(playersPawnPositions, numberOfPlayers);
+              break;
+            case END_GAME:
+              EndGameMessage endGameMessage = (EndGameMessage) msg;
+              processEndGameMessage(endGameMessage);
+              break;
             default:
               break;
           }
         } else if (message instanceof String) {
-          if (message.equals("JOIN_SUCCESS")) {
-            inGame = true;
-          } else if (message.equals("JOIN_FAILURE")) {
-            ErrorPopUpUtil.showErrorPopUp("Failed to join game");
-          } else if (inGame && inGameViewController != null) {
+          if (inGame && inGameViewController != null) {
             inGameViewController.addLobbyInfo("Lobby: " + message);
           } else {
             clientMainViewController.addServerInfo("Server: " + message);
@@ -260,9 +272,9 @@ public class MIMGui {
    */
   public void processUpdatePawnsMessage(UpdatePawnsMessage updatePawnsMessage) {
       if (inGameViewController != null) {
-        inGameViewController.clearPlayerPawns();
+        Platform.runLater(() -> inGameViewController.clearPlayerPawns());
         for (String pawn : updatePawnsMessage.getPawns()) {
-          inGameViewController.addPlayerPawns(pawn);
+          Platform.runLater(() -> inGameViewController.addPlayerPawns(pawn));
         }
       }
   }
@@ -296,9 +308,12 @@ public class MIMGui {
   public void processMoveMessage(MoveMessage moveMessage) {
     if (inGameViewController != null) {
       if (moveMessage.isAccepted()) {
+        updateMap(moveMessage.getInitialPoint().getFirst(), moveMessage.getInitialPoint().getSecond(), -1);
         if (moveMessage.getPlayerIndex() == playerIndex) {
+          updateMap(moveMessage.getFinalPoint().getFirst(), moveMessage.getFinalPoint().getSecond(), playerIndex);
           inGameViewController.addLobbyInfo("You: " + moveMessage);
         } else {
+          updateMap(moveMessage.getFinalPoint().getFirst(), moveMessage.getFinalPoint().getSecond(), moveMessage.getPlayerIndex());
           inGameViewController.addLobbyInfo("Player No. " + moveMessage.getPlayerIndex()+ ": " + moveMessage);
         }
       } else {
@@ -310,4 +325,37 @@ public class MIMGui {
   public void disconnect() {
       send(new DisconnectGameMessage());
   }
+
+  public void processEndGameMessage(EndGameMessage endGameMessage) {
+      if (inGameViewController != null) {
+      inGameViewController.addLobbyInfo("Game ended, the winner is Player: " + endGameMessage.getWinnerIndex() + "!");
+      }
+      inGame = false;
+  }
+
+  public void showMap() {
+    send(new UpdateBoardMessage());
+  }
+
+
+  public void showMap(List<List<String>> playersPawnPositions, int numberOfPlayers) {
+    Platform.runLater(() -> {
+      Stage stage = new Stage();
+      boardPreview = new BoardPreview();
+      boardPreview.initialize(playersPawnPositions, numberOfPlayers);
+      Scene scene = new Scene(boardPreview.PreviewPane);
+      stage.setScene(scene);
+      stage.setTitle("Board");
+      stage.show();
+    });
+  }
+
+  public void updateMap(int x, int y, int playerIndex) {
+    if (boardPreview != null) {
+      Platform.runLater(() -> {
+        boardPreview.updatePawnPosition(x, y, playerIndex);
+      });
+    }
+  }
+
 }

@@ -22,7 +22,7 @@ public class Lobby  {
     /**
      * The unique number assigned to this lobby.
      */
-    private final int uniqueLobbyNumber = COUNT.getAndIncrement();
+    private final int uniqueLobbyNumber;
 
     /**
      * The number of players required to start the game.
@@ -44,16 +44,23 @@ public class Lobby  {
      */
     Board board;
 
+    Boolean ghost = false;
+
     /**
      * Constructs a new Lobby with the specified number of players and board.
      *
      * @param numOfPlayers the number of players for the lobby
      * @param board the game board
      */
-    public Lobby(int numOfPlayers, Board board){
+    public Lobby(int numOfPlayers, Board board, Boolean ghost) {
         this.board = board;
         this.numOfPlayers = numOfPlayers;
-        System.out.println("uniqueLobbyNumber: " + uniqueLobbyNumber);
+        if (ghost) {
+            uniqueLobbyNumber = -1;
+        } else {
+            uniqueLobbyNumber = COUNT.incrementAndGet();
+            System.out.println("uniqueLobbyNumber: " + uniqueLobbyNumber);
+        }
     }
 
     /**
@@ -160,9 +167,16 @@ public class Lobby  {
     }
 
     public int getIndexOfWinner() {
-        //TODO: implement (if game winner hasn't been decided yet, indexOfWinner = -1)
-        ///return currentGame.getIndexOfWinner();
-        return 0;
+        //(if game winner hasn't been decided yet, indexOfWinner = -1)
+        return currentGame.getIndexOfWinner();
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public List<List<String>> getAllPawnCoordinates() {
+        return currentGame.getAllPawnCoordinates();
     }
 
 }

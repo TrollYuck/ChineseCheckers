@@ -47,5 +47,10 @@ public enum MessageType {
   /**
    * Message type for updating pawns in a game.
    */
-  UPDATE_PAWNS
+  UPDATE_PAWNS,
+
+  /**
+   * Message type for updating the board in a game.
+   */
+  UPDATE_BOARD
 }
