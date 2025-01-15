@@ -122,12 +122,11 @@ public class  ClientHandler implements Runnable {
     MoveMessage moveMessage = (MoveMessage) msg;
     moveMessage.setPlayerIndex(playerIndex);
     if (lobby.isGameStarted()) {
-      try {
-        lobby.receiveMove(moveMessage.getMove(), playerIndex);
+      if (lobby.receiveMove(moveMessage.getMove(), playerIndex)) {
         moveMessage.setAccepted(true);
         send(moveMessage);
         gameHostServer.sendToAllInLobby(moveMessage, lobby, this);
-      } catch (IllegalMoveException e) {
+      } else {
         moveMessage.setAccepted(false);
         send(moveMessage);
       }

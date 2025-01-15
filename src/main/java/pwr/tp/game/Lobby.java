@@ -47,8 +47,13 @@ public class Lobby  {
         currentGame = new Gameplay(numOfPlayers, board);
     }
 
-    public void receiveMove(Move move, int playerIndex) throws IllegalMoveException {
+    public boolean receiveMove(Move move, int playerIndex) {
+      try {
         currentGame.receiveMove(move, playerIndex);
+        return true;
+      } catch (IllegalMoveException e) {
+        return false;
+      }
     }
 
     public List<String> getPawnsFromPlayer(int playerIndex) {
