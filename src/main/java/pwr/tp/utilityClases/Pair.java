@@ -42,4 +42,8 @@ public class Pair <F extends Comparable<F>,S extends Comparable<S>> implements C
         }
         return second.compareTo(object.second);
     }
+
+    public String toString() {
+        return (first + " " + second);
+    }
 }

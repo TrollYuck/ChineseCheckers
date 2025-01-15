@@ -203,8 +203,9 @@ public class Gameplay {
     }
 
     private boolean isMoveLegal(Player player, Move move){
-        if(player.getPawns().contains(new Pawn(new Field(move.getInitialPosition())))) {
-            Move.isMoveLegal(move, stripes);
+        Pawn pawn = new Pawn(new Field(move.getInitialPosition()));
+        if(player.getPawns().contains(pawn)) {
+            return Move.isMoveLegal(move, stripes);
         }
         return false;
     }
@@ -217,6 +218,8 @@ public class Gameplay {
             } else {
                 throw new IllegalMoveException("Illegal move: " + move);
             }
+        } else {
+            throw new IllegalMoveException("Illegal playerIndex: " + move);
         }
     }
 
@@ -231,9 +234,12 @@ public class Gameplay {
 
     private void movePawn(Move move, int playerIndex) {
         Field field = board.findFieldByCoordinates(move.getInitialPosition());
+        Pawn pawn = players.get(playerIndex).findPawnByLocation(field);
         field.setEmpty();
+
         field = board.findFieldByCoordinates(move.getFinalPosition());
         field.setFull(playerIndex);
+        pawn.setLocation(field);
     }
 
 
