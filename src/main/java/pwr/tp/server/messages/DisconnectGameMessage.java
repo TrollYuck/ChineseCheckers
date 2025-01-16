@@ -20,10 +20,20 @@ public class DisconnectGameMessage implements Message {
     return type;
   }
 
+  /**
+   * Returns whether the game is disconnected.
+   *
+   * @return true if the game is disconnected, false otherwise
+   */
   public boolean isDisconnected() {
       return disconnected;
   }
 
+  /**
+   * Sets the disconnected status of the game.
+   *
+   * @param disconnected true to set the game as disconnected, false otherwise
+   */
   public void setDisconnected(boolean disconnected) {
       this.disconnected = disconnected;
   }

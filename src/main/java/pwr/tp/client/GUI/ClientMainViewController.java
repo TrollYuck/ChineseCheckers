@@ -285,6 +285,11 @@ public class ClientMainViewController {
     addAvailableGames();
   }
 
+  /**
+   * Displays the About window.
+   * Loads the About window from the FXML file and shows it in a new stage.
+   * If the FXML file cannot be loaded, an error pop-up is displayed.
+   */
   @FXML
   public void showAboutWindow() {
     try {
@@ -300,6 +305,9 @@ public class ClientMainViewController {
     }
   }
 
+  /**
+   * Closes the application.
+   */
   @FXML
   public void closeApplication() {
     Platform.exit();

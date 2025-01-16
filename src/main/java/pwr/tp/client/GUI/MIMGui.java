@@ -322,10 +322,18 @@ public class MIMGui {
     }
   }
 
+  /**
+   * Sends a request to the server to disconnect from the game.
+   */
   public void disconnect() {
       send(new DisconnectGameMessage());
   }
 
+  /**
+   * Processes the EndGameMessage received from the server.
+   *
+   * @param endGameMessage the message containing the end game information
+   */
   public void processEndGameMessage(EndGameMessage endGameMessage) {
       if (inGameViewController != null) {
       inGameViewController.addLobbyInfo("Game ended, the winner is Player: " + endGameMessage.getWinnerIndex() + "!");
@@ -333,11 +341,20 @@ public class MIMGui {
       inGame = false;
   }
 
+  /**
+   * Sends a request to the server to update the board.
+   */
   public void showMap() {
     send(new UpdateBoardMessage());
   }
 
 
+  /**
+   * Displays the board with the given players' pawn positions and number of players.
+   *
+   * @param playersPawnPositions the positions of the players' pawns
+   * @param numberOfPlayers the number of players in the game
+   */
   public void showMap(List<List<String>> playersPawnPositions, int numberOfPlayers) {
     Platform.runLater(() -> {
       Stage stage = new Stage();
@@ -350,6 +367,13 @@ public class MIMGui {
     });
   }
 
+  /**
+   * Updates the map with the given pawn position and player index.
+   *
+   * @param x the x-coordinate of the pawn
+   * @param y the y-coordinate of the pawn
+   * @param playerIndex the index of the player
+   */
   public void updateMap(int x, int y, int playerIndex) {
     if (boardPreview != null) {
       Platform.runLater(() -> {

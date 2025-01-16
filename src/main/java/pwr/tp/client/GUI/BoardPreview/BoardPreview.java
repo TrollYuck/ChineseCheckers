@@ -1,6 +1,3 @@
-/**
- * This class represents a preview of the game board.
- */
 package pwr.tp.client.GUI.BoardPreview;
 
 import javafx.scene.layout.VBox;

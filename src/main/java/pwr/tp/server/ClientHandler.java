@@ -47,6 +47,9 @@ public class  ClientHandler implements Runnable {
    */
   private final int playerIndex;
 
+  /**
+   * The index of the player in the lobby.
+   */
   private int lobbyPlayerIndex;
 
     /**
@@ -191,6 +194,7 @@ public class  ClientHandler implements Runnable {
       if (lobby.receiveMove(moveMessage.getMove(), lobbyPlayerIndex)) {
         moveMessage.setAccepted(true);
         send(moveMessage);
+        checkWinner();
         gameHostServer.sendToAllInLobby(moveMessage, lobby, this);
       } else {
         moveMessage.setAccepted(false);
@@ -221,6 +225,11 @@ public class  ClientHandler implements Runnable {
     send(disconnectGameMessage);
   }
 
+  /**
+   * Processes an UpdateBoardMessage.
+   *
+   * @param msg the message to process
+   */
   private void processUpdateBoardMessage(Message msg) {
     UpdateBoardMessage updateBoardMessage = (UpdateBoardMessage) msg;
     updateBoardMessage.update(lobby.getAllPawnCoordinates(), lobby.getNumOfPlayers() );
@@ -285,6 +294,9 @@ public class  ClientHandler implements Runnable {
       this.lobby = lobby;
   }
 
+  /**
+   * Checks if there is a winner in the lobby and sends an EndGameMessage if a winner is found.
+   */
   private void checkWinner() {
     if (lobby.getIndexOfWinner() != -1) {
       send(new EndGameMessage(lobby.getIndexOfWinner()));
