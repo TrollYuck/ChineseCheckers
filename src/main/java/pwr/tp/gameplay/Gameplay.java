@@ -13,15 +13,46 @@ import java.util.List;
 
 import static pwr.tp.movement.Move.isMoveLegal;
 
+/**
+ * Represents the gameplay of the game.
+ */
 public class Gameplay {
+    /**
+     * The number of players in the game.
+     */
     private final int numberOfPlayers;
+
+    /**
+     * The list of players in the game.
+     */
     private List<Player> players;
+
+    /**
+     * The list of stripes on the board.
+     */
     private List<Stripe> stripes;
+
+    /**
+     * The game board.
+     */
     private final Board board;
+
+    /**
+     * The index of the current player.
+     */
     private int currentPlayerIndex;
+
+    /**
+     * The index of the winning player.
+     */
     private int indexOfWinner;
 
-
+    /**
+     * Constructs a Gameplay instance with the specified number of players and board.
+     *
+     * @param numberOfPlayers the number of players
+     * @param board the game board
+     */
     public Gameplay(int numberOfPlayers, Board board) {
         this.numberOfPlayers = numberOfPlayers;
         stripes = board.getStripes();
@@ -32,15 +63,28 @@ public class Gameplay {
         setUpGame();
     }
 
+    /**
+     * Returns the index of the winner.
+     *
+     * @return the index of the winner
+     */
     public int getIndexOfWinner() {
         return indexOfWinner;
     }
 
+    /**
+     * Sets up the game by creating players and setting up pawns.
+     */
     public void setUpGame() {
         createPlayers();
         setUpPawns();
     }
 
+    /**
+     * Checks for winning conditions.
+     *
+     * @return true if a player has won, false otherwise
+     */
     private boolean checkForWinningConditions() {
         boolean ok = true;
         for(int i = 0; i < 4; i ++) {
@@ -141,6 +185,9 @@ public class Gameplay {
 
     }
 
+    /**
+     * Sets up pawns for the players.
+     */
     private void setUpPawns() {
         if(numberOfPlayers >= 2) {
             for(int i = 0; i < 4; i ++) {
@@ -195,6 +242,9 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Creates players for the game.
+     */
     private void createPlayers() {
         for(int i = 0; i < numberOfPlayers; i++) {
             Player player = new Player();
@@ -202,6 +252,13 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Checks if a move is legal for a player.
+     *
+     * @param player the player making the move
+     * @param move the move to be checked
+     * @return true if the move is legal, false otherwise
+     */
     private boolean isMoveLegal(Player player, Move move){
         Pawn pawn = new Pawn(new Field(move.getInitialPosition()));
         if(player.getPawns().contains(pawn)) {
@@ -210,6 +267,13 @@ public class Gameplay {
         return false;
     }
 
+    /**
+     * Receives a move from a player and processes it.
+     *
+     * @param move the move to be processed
+     * @param playerIndex the index of the player making the move
+     * @throws IllegalMoveException if the move is illegal
+     */
     public void receiveMove(Move move, int playerIndex) throws IllegalMoveException {
         if(playerIndex == currentPlayerIndex) {
             if(isMoveLegal(players.get(playerIndex), move)) {
@@ -223,6 +287,12 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Returns the coordinates of the pawns of a player.
+     *
+     * @param playerIndex the index of the player
+     * @return a list of strings representing the coordinates of the pawns
+     */
     public List<String> getPawnsFromPlayer(int playerIndex) {
         List<Pawn> pawns = players.get(playerIndex).getPawns();
         List<String> result = new ArrayList<>();
@@ -232,6 +302,11 @@ public class Gameplay {
         return result;
     }
 
+    /**
+     * Returns the coordinates of all pawns of all players.
+     *
+     * @return a list of lists of strings representing the coordinates of the pawns
+     */
     public List<List<String>> getAllPawnCoordinates() {
         List<List<String>> result = new ArrayList<>();
         for(Player player: players) {
@@ -244,6 +319,12 @@ public class Gameplay {
         return result;
     }
 
+    /**
+     * Moves a pawn according to the specified move.
+     *
+     * @param move the move to be executed
+     * @param playerIndex the index of the player making the move
+     */
     private void movePawn(Move move, int playerIndex) {
         Field field = board.findFieldByCoordinates(move.getInitialPosition());
         Pawn pawn = players.get(playerIndex).findPawnByLocation(field);
