@@ -10,7 +10,7 @@ import pwr.tp.utilityClases.Pair;
 public class debugger {
     public static void main(String[] args) {
         StarBoard starBoard = new StarBoard();
-        Lobby lobby = new Lobby(2, starBoard);
+        Lobby lobby = new Lobby(2, starBoard, false);
         lobby.startGame();
 
 //        for(Field field: starBoard.getFields()) {
