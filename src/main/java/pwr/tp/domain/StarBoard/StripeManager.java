@@ -5,16 +5,32 @@ import pwr.tp.utilityClases.Pair;
 
 import java.util.List;
 
+/**
+ * Manages the stripes on the star board.
+ * This class is responsible for organizing fields into horizontal, left-skew, and right-skew stripes.
+ */
 public class StripeManager {
     List<Field> fields;
     List<Stripe> stripeList;
 
+    /**
+     * Constructs a StripeManager with the given fields and stripe list.
+     *
+     * @param fields the list of fields on the board
+     * @param stripeList the list of stripes on the board
+     */
     public StripeManager(List<Field> fields, List<Stripe> stripeList) {
         this.fields = fields;
         this.stripeList = stripeList;
         fillStripes();
     }
 
+    /**
+     * Finds a field by its coordinates.
+     *
+     * @param coordinates the coordinates of the field
+     * @return the field at the given coordinates, or null if not found
+     */
     public Field findFieldByCoordinates(Pair<Integer, Integer> coordinates) {
         for(Field field: fields) {
             if(field.getCoordinates().equals(coordinates)) {
@@ -24,13 +40,18 @@ public class StripeManager {
         return null;
     }
 
+    /**
+     * Fills the stripes on the board.
+     */
     public void fillStripes() {
         fillHorizontalStripes();
         fillLeftSkewStripes();
         fillRightSkewStripes();
-
     }
 
+    /**
+     * Fills the horizontal stripes on the board.
+     */
     public void fillHorizontalStripes() {
         Stripe stripe = new Stripe();
         for(Field field: fields) {
@@ -43,14 +64,15 @@ public class StripeManager {
         }
     }
 
+    /**
+     * Fills the left-skew stripes on the board.
+     */
     public void fillLeftSkewStripes() {
-        //toDo: just go through all cases, it'll be similar to horizontal stripes case
         Stripe stripe;
         for(int i = 1; i < 5; i++) {
             int k = i;
             stripe = new Stripe();
             for(int j = 5; k > 0; j++) {
-                //stripe.addField(new Field(new Pair<>(j,k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
                 k--;
             }
@@ -66,7 +88,6 @@ public class StripeManager {
                 } else if(k > i) {
                     k--;
                 }
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
             stripeList.add(stripe);
@@ -76,18 +97,14 @@ public class StripeManager {
             stripe = new Stripe();
             for(int j = 5; j < 10; j++) {
                 int k = 9 + i - j + 5;
-                //stripe.addField(new Field(new Pair<>(j,k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
-
             }
             for(int j = 10; j < 14; j++) {
                 int k = 5 + i;
-                //stripe.addField(new Field(new Pair<>(j,k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
             for(int j = 1; j <= i; j++){
                 int k = i + 1 - j;
-                //stripe.addField(new Field(new Pair<>(j + 13,k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j + 13,k)));
             }
             stripeList.add(stripe);
@@ -97,22 +114,21 @@ public class StripeManager {
             stripe = new Stripe();
             int k = 9 + i;
             for(int j = 9 + i; j < 14; j++) {
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
             stripeList.add(stripe);
         }
-
     }
 
+    /**
+     * Fills the right-skew stripes on the board.
+     */
     public void fillRightSkewStripes() {
-        //toDo: just go through all cases, it'll be similar to horizontal stripes case
         Stripe stripe;
         for(int i = 1; i < 5; i++) {
             int k = 14 - i;
             stripe = new Stripe();
             for(int j = 1; j <= i; j++) {
-                //stripe.addField(new Field(new Pair<>(j + 4,k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j + 4,k)));
             }
             stripeList.add(stripe);
@@ -123,19 +139,16 @@ public class StripeManager {
             int k = 0;
             for(int j = 1 + i - 1; j <= 4; j++) {
                 k++;
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
 
             k = 9 - i + 1;
             for(int j = 5; j < 10; j++) {
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
 
             for(int j = 10; j < 14; j++) {
                 k = j - i + 1;
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
 
@@ -146,17 +159,14 @@ public class StripeManager {
             stripe = new Stripe();
             for(int j = 5; j < 10; j++) {
                 int k = 4 - i + 1;
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
             for(int j = 10; j < 14; j++) {
                 int k = j - i - 4;
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
             for(int j = 14; j <= 14 + i - 1; j++) {
                 int k = 5 - i;
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
 
@@ -168,7 +178,6 @@ public class StripeManager {
             int k = 0;
             for(int j = 10 + i - 1; j < 14; j ++) {
                 k++;
-                //stripe.addField(new Field(new Pair<>(j, k)));
                 stripe.addField(findFieldByCoordinates(new Pair<>(j,k)));
             }
             stripeList.add(stripe);

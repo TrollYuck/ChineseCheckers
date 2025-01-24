@@ -21,7 +21,7 @@ public class CreateLobby {
         if (boardTypeString.equalsIgnoreCase("star")) {
             Board board = new StarBoard();
             if (board.getPossibleNoPlayers().contains(numOfPlayers)) {
-                return new Lobby(numOfPlayers, new StarBoard());
+                return new Lobby(numOfPlayers, new StarBoard(), false);
             }
             throw new IllegalNumberOfPlayersException();
         }

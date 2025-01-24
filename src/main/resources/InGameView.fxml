@@ -51,8 +51,9 @@
                         <Font name="System Bold Italic" size="12.0" />
                      </font>
                   </Label>
-                  <Button fx:id="RefreshButton" onAction="#refresh" mnemonicParsing="false" style="-fx-font-weight: bold 100; -fx-background-color: cornflowerblue; -fx-border-color: darkslateblue;" text="Refresh" />
+                  <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#refresh" style="-fx-font-weight: bold 100; -fx-background-color: cornflowerblue; -fx-border-color: darkslateblue;" text="Refresh" />
                   <TextArea fx:id="PlayerPawnsTextField" editable="false" prefHeight="300.0" prefWidth="210.0" promptText="Your paws will be displayed here" />
+                  <Button fx:id="ShowMapButton" mnemonicParsing="false" onAction="#showMap" style="-fx-font-weight: bold 100; -fx-background-color: khaki; -fx-border-color: black;" text="Show Map" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="402.0">

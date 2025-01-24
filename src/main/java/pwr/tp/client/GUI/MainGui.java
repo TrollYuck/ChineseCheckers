@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pwr.tp.client.GUI.BoardPreview.BoardPreview;
 
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ public class MainGui extends Application {
     primaryStage.setResizable(false);
     primaryStage.show();
   }
-
+  
   /**
    * The main method to launch the JavaFX application.
    *

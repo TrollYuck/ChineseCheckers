@@ -11,6 +11,9 @@ import javafx.scene.layout.BorderPane;
  */
 public class InGameViewController {
 
+  /**
+   * The MIMGui instance for managing the game logic and communication.
+   */
   private MIMGui mim;
 
   public BorderPane InGameBorderPane;
@@ -45,7 +48,15 @@ public class InGameViewController {
    */
   public Button DisconnectButton;
 
+  /**
+   * Button to refresh the player's pawns information.
+   */
   public Button RefreshButton;
+
+  /**
+   * Button to show the map.
+   */
+  public Button ShowMapButton;
 
   /**
    * TextArea to display the player's pawns information.
@@ -123,11 +134,17 @@ public class InGameViewController {
     mim.disconnect();
   }
 
-  public BorderPane getInGameBorderPane() {
-    return InGameBorderPane;
-  }
-
+  /**
+   * Refreshes the player's pawns information by sending an update request to the server.
+   */
   public void refresh() {
       mim.updateMyPawnsRequest();
+  }
+
+  /**
+   * Sends a request to the server to update and display the board.
+   */
+  public void showMap() {
+      mim.showMap();
   }
 }
