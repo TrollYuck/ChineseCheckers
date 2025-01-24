@@ -25,9 +25,9 @@ public class debugger {
 //            lobby.receiveMove(new Move(new Pair<>(15, 1), new Pair<>(13,5)), 1);
 //            lobby.receiveMove(new Move(new Pair<>(2, 2), new Pair<>(6,9)), 0);
 
-            lobby.receiveMove(new Move(new Pair<>(4, 3), new Pair<>(5,7)), 0);
+            lobby.receiveMove(new Move(new Pair<>(4, 2), new Pair<>(5,7)), 0);
             lobby.receiveMove(new Move(new Pair<>(15, 1), new Pair<>(13,5)), 1);
-            lobby.receiveMove(new Move(new Pair<>(2, 1), new Pair<>(6,6)), 0);
+            lobby.receiveMove(new Move(new Pair<>(2, 2), new Pair<>(6,7)), 0);
 
 
             System.out.println(lobby.getPawnsFromPlayer(0));
