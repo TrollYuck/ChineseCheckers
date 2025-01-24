@@ -43,7 +43,7 @@ public class Move {
                 visited.add(new Field(coordinates));
             }
             List<Stripe> appropriateStripes = findStripes(coordinates, stripeList);
-            queue.addAll(checkingOutPossibleFieldsToMove(appropriateStripes, coordinates, move, visited));
+            queue.addAll(checkingOutPossibleFieldsToMove(appropriateStripes, coordinates, move));
         }
         return false;
     }
@@ -63,7 +63,7 @@ public class Move {
         return result;
     }
 
-    private static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates, Move move, List<Field> visited) {
+    private static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates, Move move) {
         List<Field> fields = new ArrayList<>();
         for(Stripe stripe: stripeList) {
             int state = 1;
@@ -73,7 +73,6 @@ public class Move {
                 System.out.println(field);
                 if(idx + 1 == i && coordinates.equals(move.initialPosition) && field.isEmpty()) {
                     if(move.finalPosition.equals(field.getCoordinates())) {
-                        visited.add(field);
                         fields.add(field);
                         return fields;
                     }
@@ -81,7 +80,6 @@ public class Move {
                     //System.out.println(field.isEmpty());
                 } else if(field.isEmpty() && state == 0) {
                     System.out.println("state 0 and field empty" );
-                    visited.add(field);
                     fields.add(field);
                     state = 1;
                 } else if(field.isEmpty() && state == 1) {
@@ -101,14 +99,12 @@ public class Move {
                 System.out.println(field);
                 if(idx - 1 == i && coordinates.equals(move.initialPosition) && field.isEmpty()) {
                     if(move.finalPosition.equals(field.getCoordinates())) {
-                        visited.add(field);
                         fields.add(field);
                         return fields;
                     }
                     System.out.println("weird state");
                 } else if(field.isEmpty() && state == 0) {
                     System.out.println("state 0 and field empty");
-                    visited.add(field);
                     fields.add(field);
                     state = 1;
                 } else if(field.isEmpty() && state == 1) {
