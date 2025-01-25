@@ -4,6 +4,7 @@ import pwr.tp.domain.Board;
 import pwr.tp.domain.Field;
 import pwr.tp.domain.Pawn;
 import pwr.tp.domain.StarBoard.Stripe;
+import pwr.tp.game.Bot;
 import pwr.tp.movement.Move;
 
 import java.util.ArrayList;
@@ -47,6 +48,8 @@ public class StandardGameplay implements Gameplay{
      * The name of the game type.
      */
     private String gameType;
+
+    private List<Integer> bots;
 
     /**
      * Constructs a Gameplay instance with the specified number of players and board.
@@ -340,18 +343,33 @@ public class StandardGameplay implements Gameplay{
      * @param playerIndex the index of the player making the move
      * @throws IllegalMoveException if the move is illegal
      */
+
     @Override
     public void receiveMove(Move move, int playerIndex) throws IllegalMoveException {
         if(playerIndex == currentPlayerIndex) {
             if(isMoveLegal(players.get(playerIndex), move)) {
                 movePawn(move, playerIndex);
                 currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
+                if(bots.contains(currentPlayerIndex)) {
+                    getBotsMove(currentPlayerIndex);
+                }
+
             } else {
                 throw new IllegalMoveException("Illegal move: " + move);
             }
         } else {
             throw new IllegalMoveException("Illegal playerIndex: " + move);
         }
+    }
+
+    public void addBot(int idx) {
+        bots.add(idx);
+    }
+
+    public void getBotsMove(int idx) {
+
+        Move move = Bot.generateMove(idx, gameType, stripes, players.get(idx).getPawns());
+        this.receiveMove(move, idx);
     }
 
     /**

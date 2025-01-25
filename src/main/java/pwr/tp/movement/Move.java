@@ -48,7 +48,7 @@ public class Move {
         return false;
     }
 
-    private static List<Stripe> findStripes(Pair<Integer, Integer> coordinates, List<Stripe> stripeList) {
+    public static List<Stripe> findStripes(Pair<Integer, Integer> coordinates, List<Stripe> stripeList) {
         List<Stripe> result = new ArrayList<>();
         for(Stripe stripe: stripeList) {
             for(Field field: stripe.getFieldsInRow()) {
@@ -63,7 +63,7 @@ public class Move {
         return result;
     }
 
-    private static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates, Move move) {
+    public static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates, Move move) {
         List<Field> fields = new ArrayList<>();
         for(Stripe stripe: stripeList) {
             int state = 1;
