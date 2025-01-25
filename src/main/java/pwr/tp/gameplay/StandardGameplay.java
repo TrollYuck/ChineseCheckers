@@ -342,10 +342,12 @@ public class StandardGameplay implements Gameplay{
      */
     @Override
     public void receiveMove(Move move, int playerIndex) throws IllegalMoveException {
+        checkForWinningConditions();
         if(playerIndex == currentPlayerIndex) {
             if(isMoveLegal(players.get(playerIndex), move)) {
                 movePawn(move, playerIndex);
                 currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
+                checkForWinningConditions();
             } else {
                 throw new IllegalMoveException("Illegal move: " + move);
             }
