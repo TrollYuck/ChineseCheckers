@@ -44,8 +44,6 @@ public class Lobby  {
      */
     Board board;
 
-    Boolean ghost = false;
-
     /**
      * Constructs a new Lobby with the specified number of players and board.
      *
@@ -166,15 +164,31 @@ public class Lobby  {
                 " with " + currentNumOfPlayers + "/" + numOfPlayers + " players";
     }
 
+    /**
+     * Returns the index of the winner.
+     * If the game winner hasn't been decided yet, the index will be -1.
+     *
+     * @return the index of the winner, or -1 if not decided
+     */
     public int getIndexOfWinner() {
         //(if game winner hasn't been decided yet, indexOfWinner = -1)
         return currentGame.getIndexOfWinner();
     }
 
+    /**
+     * Returns the game board used in the lobby.
+     *
+     * @return the game board
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Returns the coordinates of all pawns in the game.
+     *
+     * @return a list of lists containing the coordinates of all pawns
+     */
     public List<List<String>> getAllPawnCoordinates() {
         return currentGame.getAllPawnCoordinates();
     }
