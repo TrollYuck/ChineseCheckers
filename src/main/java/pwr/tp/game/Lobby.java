@@ -1,12 +1,10 @@
 package pwr.tp.game;
 
 import pwr.tp.domain.Board;
-import pwr.tp.domain.Pawn;
-import pwr.tp.gameplay.Gameplay;
+import pwr.tp.gameplay.StandardGameplay;
 import pwr.tp.gameplay.IllegalMoveException;
 import pwr.tp.movement.Move;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,7 +35,7 @@ public class Lobby  {
     /**
      * The current game being played in the lobby.
      */
-    Gameplay currentGame;
+    StandardGameplay currentGame;
 
     /**
      * The game board used in the lobby.
@@ -106,7 +104,8 @@ public class Lobby  {
      * Starts the game in the lobby.
      */
     public void startGame() {
-        currentGame = new Gameplay(numOfPlayers, board);
+        //TODO: implement asking players for game type, for standard game any string, for double base game as below
+        currentGame = new StandardGameplay(numOfPlayers, board, "double base game");
     }
 
     /**
@@ -190,7 +189,7 @@ public class Lobby  {
      * @return a list of lists containing the coordinates of all pawns
      */
     public List<List<String>> getAllPawnCoordinates() {
-        return currentGame.getAllPawnCoordinates();
+        return currentGame.getAllPawnsCoordinates();
     }
 
 }
