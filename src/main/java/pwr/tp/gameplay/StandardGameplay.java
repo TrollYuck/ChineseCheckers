@@ -367,8 +367,7 @@ public class StandardGameplay implements Gameplay{
     }
 
     public void getBotsMove(int idx) {
-
-        Move move = Bot.generateMove(idx, gameType, stripes, players.get(idx).getPawns());
+        Move move = Bot.generateMove(gameType, stripes, players.get(idx).getPawns());
         this.receiveMove(move, idx);
     }
 

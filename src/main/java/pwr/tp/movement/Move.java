@@ -124,5 +124,61 @@ public class Move {
         return fields;
     }
 
+    public static List<Field> checkingOutPossibleFieldsToMove(List<Stripe> stripeList, Pair<Integer, Integer> coordinates, Pair<Integer, Integer> initialPosition) {
+        List<Field> fields = new ArrayList<>();
+        for(Stripe stripe: stripeList) {
+            int state = 1;
+            int idx = stripe.getFieldsInRow().indexOf(new Field(coordinates));
+            for(int i = idx + 1; i < stripe.getFieldsInRow().size(); i++) {
+                Field field = stripe.getFieldsInRow().get(i);
+                System.out.println(field);
+                if(idx + 1 == i && coordinates.equals(initialPosition) && field.isEmpty()) {
+                    fields.add(field);
+                    return fields;
+
+                } else if(field.isEmpty() && state == 0) {
+                    fields.add(field);
+                    state = 1;
+                    return fields;
+                } else if(field.isEmpty() && state == 1) {
+                    System.out.println("state 1 and field empty");
+                    break;
+                } else if(!field.isEmpty() && state == 0) {
+                    System.out.println("state 0 and field not empty");
+                    break;
+                } else if(!field.isEmpty() && state == 1) {
+                    System.out.println("state 1 and field not empty");
+                    state = 0;
+                }
+            }
+            state = 1;
+            for(int i = idx - 1; i >= 0; i--) {
+                Field field = stripe.getFieldsInRow().get(i);
+                System.out.println(field);
+                if(idx - 1 == i && coordinates.equals(initialPosition) && field.isEmpty()) {
+                    fields.add(field);
+                    return fields;
+                } else if(field.isEmpty() && state == 0) {
+                    System.out.println("state 0 and field empty");
+                    fields.add(field);
+                    state = 1;
+                    return fields;
+                } else if(field.isEmpty() && state == 1) {
+                    System.out.println("state 1 and field empty");
+                    break;
+                } else if(!field.isEmpty() && state == 0) {
+                    System.out.println("state 0 and field not empty");
+                    break;
+                } else if(!field.isEmpty() && state == 1) {
+                    System.out.println("state 1 and field not empty");
+                    state = 0;
+                }
+            }
+
+        }
+        //System.out.println("fields " + fields);
+        return fields;
+    }
+
 
 }
