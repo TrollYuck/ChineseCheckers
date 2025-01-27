@@ -70,51 +70,51 @@ public class Move {
             int idx = stripe.getFieldsInRow().indexOf(new Field(coordinates));
             for(int i = idx + 1; i < stripe.getFieldsInRow().size(); i++) {
                 Field field = stripe.getFieldsInRow().get(i);
-                System.out.println(field);
+//                System.out.println(field);
                 if(idx + 1 == i && coordinates.equals(move.initialPosition) && field.isEmpty()) {
                     if(move.finalPosition.equals(field.getCoordinates())) {
                         fields.add(field);
                         return fields;
                     }
-                    System.out.println("weird state");
+//                    System.out.println("weird state");
                     //System.out.println(field.isEmpty());
                 } else if(field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field empty" );
+//                    System.out.println("state 0 and field empty" );
                     fields.add(field);
                     state = 1;
                 } else if(field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field empty");
+//                    System.out.println("state 1 and field empty");
                     break;
                 } else if(!field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field not empty");
+//                    System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field not empty");
+//                    System.out.println("state 1 and field not empty");
                     state = 0;
                 }
             }
             state = 1;
             for(int i = idx - 1; i >= 0; i--) {
                 Field field = stripe.getFieldsInRow().get(i);
-                System.out.println(field);
+//                System.out.println(field);
                 if(idx - 1 == i && coordinates.equals(move.initialPosition) && field.isEmpty()) {
                     if(move.finalPosition.equals(field.getCoordinates())) {
                         fields.add(field);
                         return fields;
                     }
-                    System.out.println("weird state");
+//                    System.out.println("weird state");
                 } else if(field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field empty");
+//                    System.out.println("state 0 and field empty");
                     fields.add(field);
                     state = 1;
                 } else if(field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field empty");
+//                    System.out.println("state 1 and field empty");
                     break;
                 } else if(!field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field not empty");
+//                    System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field not empty");
+//                    System.out.println("state 1 and field not empty");
                     state = 0;
                 }
             }
@@ -141,13 +141,13 @@ public class Move {
                     state = 1;
                     return fields;
                 } else if(field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field empty");
+//                    System.out.println("state 1 and field empty");
                     break;
                 } else if(!field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field not empty");
+//                    System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field not empty");
+//                    System.out.println("state 1 and field not empty");
                     state = 0;
                 }
             }
@@ -159,18 +159,18 @@ public class Move {
                     fields.add(field);
                     return fields;
                 } else if(field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field empty");
+//                    System.out.println("state 0 and field empty");
                     fields.add(field);
                     state = 1;
                     return fields;
                 } else if(field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field empty");
+//                    System.out.println("state 1 and field empty");
                     break;
                 } else if(!field.isEmpty() && state == 0) {
-                    System.out.println("state 0 and field not empty");
+//                    System.out.println("state 0 and field not empty");
                     break;
                 } else if(!field.isEmpty() && state == 1) {
-                    System.out.println("state 1 and field not empty");
+//                    System.out.println("state 1 and field not empty");
                     state = 0;
                 }
             }

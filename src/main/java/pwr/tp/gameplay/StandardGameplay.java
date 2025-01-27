@@ -61,6 +61,7 @@ public class StandardGameplay implements Gameplay{
         this.numberOfPlayers = numberOfPlayers;
         stripes = board.getStripes();
         this.board = board;
+        this.bots = new ArrayList<>();
         currentPlayerIndex = 0;
         indexOfWinner = -1;
         this.gameType = gameType;
@@ -78,6 +79,10 @@ public class StandardGameplay implements Gameplay{
     @Override
     public int getIndexOfWinner() {
         return indexOfWinner;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 
     /**
@@ -257,7 +262,7 @@ public class StandardGameplay implements Gameplay{
     }
 
     private void setUpDoubleBasedGame() {
-        if(numberOfPlayers == 2) {
+        if(numberOfPlayers >= 2) {
             for(int i = 0; i < 4; i ++) {
                 Stripe stripe = stripes.get(i);
                 for(Field field: stripe.getFieldsInRow()) {
@@ -288,7 +293,8 @@ public class StandardGameplay implements Gameplay{
                     field.setFull(1);
                 }
             }
-        } else {
+        }
+        if(numberOfPlayers >= 3){
             for(int i = 34; i < 38; i++) {
                 Stripe stripe = stripes.get(i);
                 for(Field field: stripe.getFieldsInRow()) {
@@ -363,7 +369,7 @@ public class StandardGameplay implements Gameplay{
     }
 
     public void getBotsMove(int idx) {
-        Move move = Bot.generateMove(gameType, stripes, players.get(idx).getPawns());
+        Move move = Bot.generateMove(stripes, players.get(idx).getPawns());
         this.receiveMove(move, idx);
     }
 

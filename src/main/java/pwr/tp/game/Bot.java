@@ -9,14 +9,10 @@ import java.util.List;
 
 public class Bot {
 
-    public static Move generateMove(String gameType, List<Stripe> stripes, List<Pawn> pawns) {
+    public static Move generateMove(List<Stripe> stripes, List<Pawn> pawns) {
         Move move = null;
         for(Pawn pawn: pawns) {
-            if(gameType.equals("double base game")) {
-                move = generateMoveForDoubleBaseGame(pawn.getLocation(), stripes);
-            } else {
-                move = generateMoveForStandardGame(pawn.getLocation(), stripes);
-            }
+            move = generateMoveForStandardGame(pawn.getLocation(), stripes);
             if(move.getFinalPosition() != null) {
                 break;
             }
@@ -24,20 +20,14 @@ public class Bot {
         return move;
     }
 
-    public static Move generateMoveForDoubleBaseGame(Field field, List<Stripe> stripes) {
-        //TODO: think how to approach moving pawns in the right direction
-        List <Stripe> stripeList = Move.findStripes(field.getCoordinates(), stripes);
-        List<Field> fields = Move.checkingOutPossibleFieldsToMove(stripeList, field.getCoordinates(), field.getCoordinates());
-
-        return new Move(field.getCoordinates(), fields.getFirst().getCoordinates());
-
-    }
-
     public static Move generateMoveForStandardGame(Field field, List<Stripe> stripes) {
         //TODO: think how to approach moving pawns in the right direction
         List <Stripe> stripeList = Move.findStripes(field.getCoordinates(), stripes);
         List<Field> fields = Move.checkingOutPossibleFieldsToMove(stripeList, field.getCoordinates(), field.getCoordinates());
-
-        return new Move(field.getCoordinates(), fields.getFirst().getCoordinates());
+        if(!fields.isEmpty()) {
+            return new Move(field.getCoordinates(), fields.getFirst().getCoordinates());
+        } else {
+            return new Move(null, null);
+        }
     }
 }

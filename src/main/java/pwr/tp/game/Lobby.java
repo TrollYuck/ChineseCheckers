@@ -192,4 +192,9 @@ public class Lobby  {
         return currentGame.getAllPawnsCoordinates();
     }
 
+    public void addBot(int idx) {
+        currentGame.addBot(idx);
+        //TODO: use somewhere
+    }
+
 }
