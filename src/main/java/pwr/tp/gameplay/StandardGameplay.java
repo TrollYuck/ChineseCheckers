@@ -90,10 +90,8 @@ public class StandardGameplay implements Gameplay{
 
     /**
      * Checks for winning conditions.
-     *
-     * @return true if a player has won, false otherwise
      */
-    private boolean checkForWinningConditions() {
+    private void checkForWinningConditions() {
         boolean ok = true;
         for(int i = 0; i < 4; i ++) {
             Stripe stripe = stripes.get(i);
@@ -106,7 +104,7 @@ public class StandardGameplay implements Gameplay{
         }
         if(ok) {
             indexOfWinner = 1;
-            return true;
+            return;
         }
         ok = true;
 
@@ -122,7 +120,7 @@ public class StandardGameplay implements Gameplay{
 
         if(ok) {
             indexOfWinner = 0;
-            return true;
+            return;
         }
         ok = true;
 
@@ -138,7 +136,7 @@ public class StandardGameplay implements Gameplay{
 
         if(ok) {
             indexOfWinner = 3;
-            return true;
+            return;
         }
         ok = true;
 
@@ -155,7 +153,7 @@ public class StandardGameplay implements Gameplay{
 
         if(ok) {
             indexOfWinner = 2;
-            return true;
+            return;
         }
         ok = true;
 
@@ -171,7 +169,7 @@ public class StandardGameplay implements Gameplay{
 
         if(ok) {
             indexOfWinner = 5;
-            return true;
+            return;
         }
         ok = true;
 
@@ -187,9 +185,7 @@ public class StandardGameplay implements Gameplay{
 
         if(ok) {
             indexOfWinner = 4;
-            return true;
         }
-        return false;
 
     }
 
