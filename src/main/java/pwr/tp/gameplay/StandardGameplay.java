@@ -96,7 +96,7 @@ public class StandardGameplay implements Gameplay{
     /**
      * Checks for winning conditions.
      */
-    private void checkForWinningConditions() {
+    public void checkForWinningConditions() {
         boolean ok = true;
         for(int i = 0; i < 4; i ++) {
             Stripe stripe = stripes.get(i);
@@ -199,7 +199,7 @@ public class StandardGameplay implements Gameplay{
      */
     private void setUpPawns() {
         switch (gameType){
-            case "double base game":
+            case "double base":
                 setUpDoubleBasedGame();
                 break;
             default:
@@ -355,7 +355,6 @@ public class StandardGameplay implements Gameplay{
                 if(bots.contains(currentPlayerIndex)) {
                     getBotsMove(currentPlayerIndex);
                 }
-
             } else {
                 throw new IllegalMoveException("Illegal move: " + move);
             }

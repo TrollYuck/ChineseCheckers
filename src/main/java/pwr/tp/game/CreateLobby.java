@@ -17,11 +17,13 @@ public class CreateLobby {
      * @throws IllegalBoardTypeException if the board type is not recognized
      * @throws IllegalNumberOfPlayersException if the number of players is not allowed for the specified board type
      */
-    public static Lobby createLobby(int numOfPlayers, String boardTypeString) throws IllegalBoardTypeException, IllegalNumberOfPlayersException {
+    public static Lobby createLobby(int numOfPlayers, String boardTypeString, String gameType) throws IllegalBoardTypeException, IllegalNumberOfPlayersException {
         if (boardTypeString.equalsIgnoreCase("star")) {
             Board board = new StarBoard();
             if (board.getPossibleNoPlayers().contains(numOfPlayers)) {
-                return new Lobby(numOfPlayers, new StarBoard(), false);
+                Lobby lobby = new Lobby(numOfPlayers, board, false);
+                lobby.setGameType(gameType);
+                return lobby;
             }
             throw new IllegalNumberOfPlayersException();
         }

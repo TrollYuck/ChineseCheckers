@@ -1,5 +1,6 @@
 package pwr.tp.client.GUI;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -146,5 +147,9 @@ public class InGameViewController {
    */
   public void showMap() {
       mim.showMap();
+  }
+
+  public void addBot(ActionEvent actionEvent) {
+    mim.addBot();
   }
 }

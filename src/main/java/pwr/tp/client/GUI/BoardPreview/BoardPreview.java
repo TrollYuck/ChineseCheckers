@@ -35,10 +35,11 @@ public class BoardPreview {
      * @param playerPawnPositions List of player pawn positions.
      * @param numberOfPlayers     Number of players in the game.
      */
-    public void initialize(List<List<String>> playerPawnPositions, int numberOfPlayers) {
+    public void initialize(List<List<String>> playerPawnPositions, int numberOfPlayers, String gameType) {
       PreviewPane.setPrefWidth(600);
       PreviewPane.setPrefHeight(600);
       Lobby lobby = new Lobby(numberOfPlayers, new StarBoard(), true);
+      lobby.setGameType(gameType);
       setStripes(lobby.getBoard().getStripes());
       fillTheVoid();
       lobby.startGame();

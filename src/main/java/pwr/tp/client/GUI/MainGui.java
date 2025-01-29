@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import pwr.tp.client.GUI.BoardPreview.BoardPreview;
 
 import java.util.Objects;

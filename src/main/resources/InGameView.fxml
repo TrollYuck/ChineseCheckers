@@ -63,6 +63,11 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
+                  <Button fx:id="AddBotButton" mnemonicParsing="false" onAction="#addBot" style="-fx-background-color: silver; -fx-border-color: black;" text="Add Bot" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
                   <TextArea fx:id="LobbyInfoTextField" editable="false" prefHeight="300.0" prefWidth="390.0" promptText="Lobby info here" />
                </children>
             </VBox>

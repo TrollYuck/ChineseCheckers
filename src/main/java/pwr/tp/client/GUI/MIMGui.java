@@ -66,6 +66,8 @@ public class MIMGui {
    */
   private boolean inGame = false;
 
+  private String gameType;
+
   /**
    * Constructs a MIMGui object with the specified ClientMainViewController.
    *
@@ -144,6 +146,7 @@ public class MIMGui {
             case JOIN:
               JoinMessage joinMessage = (JoinMessage) msg;
               if (joinMessage.isAccepted()) {
+                gameType = joinMessage.getGameType();
                 playerIndex = joinMessage.getPlayerIndex();
                 inGame = true;
               } else {
@@ -165,6 +168,10 @@ public class MIMGui {
               List<List<String>> playersPawnPositions = updateBoardMessage.getPlayersPawnPositions();
               int numberOfPlayers = updateBoardMessage.getNumberOfPlayers();
               showMap(playersPawnPositions, numberOfPlayers);
+              break;
+            case ADD_BOT:
+              AddBotMessage addBotMessage = (AddBotMessage) msg;
+              processAddBotMessage(addBotMessage);
               break;
             case END_GAME:
               EndGameMessage endGameMessage = (EndGameMessage) msg;
@@ -194,6 +201,12 @@ public class MIMGui {
     }
   }
 
+  private void processAddBotMessage(AddBotMessage addBotMessage) {
+    if (inGameViewController != null) {
+      inGameViewController.addLobbyInfo("Bot added");
+    }
+  }
+
   /**
    * Sends a message to the server.
    *
@@ -217,6 +230,7 @@ public class MIMGui {
    * @param gameType the type of the game
    */
   public void createGame(int players, String gameType) {
+    this.gameType = gameType;
     send(new CreateGameMessage(players, gameType));
   }
 
@@ -359,7 +373,7 @@ public class MIMGui {
     Platform.runLater(() -> {
       Stage stage = new Stage();
       boardPreview = new BoardPreview();
-      boardPreview.initialize(playersPawnPositions, numberOfPlayers);
+      boardPreview.initialize(playersPawnPositions, numberOfPlayers, gameType);
       Scene scene = new Scene(boardPreview.PreviewPane);
       stage.setScene(scene);
       stage.setTitle("Board");
@@ -380,6 +394,10 @@ public class MIMGui {
         boardPreview.updatePawnPosition(x, y, playerIndex);
       });
     }
+  }
+
+  public void addBot() {
+    send(new AddBotMessage());
   }
 
 }

@@ -23,6 +23,13 @@ public class Pair<F extends Comparable<F>, S extends Comparable<S>> implements C
         this.second = s;
     }
 
+    public Pair(String str) {
+        String[] parts = str.split(",");
+
+        this.first = (F) parts[0].trim();
+        this.second = (S) parts[1].trim();
+    }
+
     /**
      * Returns the first element of the pair.
      *
@@ -87,6 +94,7 @@ public class Pair<F extends Comparable<F>, S extends Comparable<S>> implements C
      */
     @Override
     public String toString() {
-        return first + " " + second;
+        return first + "," + second;
     }
+
 }

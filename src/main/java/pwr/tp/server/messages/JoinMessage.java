@@ -24,6 +24,8 @@ public class JoinMessage implements Message {
    */
   private int playerIndex;
 
+  private String gameType;
+
   /**
    * Constructs a JoinMessage with the specified unique lobby number.
    *
@@ -76,6 +78,14 @@ public class JoinMessage implements Message {
    */
   public int getPlayerIndex() {
       return playerIndex;
+  }
+
+  public String getGameType() {
+    return gameType;
+  }
+
+  public void setGameType(String gameType) {
+    this.gameType = gameType;
   }
 
   /**

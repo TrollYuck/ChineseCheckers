@@ -52,6 +52,8 @@ public class  ClientHandler implements Runnable {
    */
   private int lobbyPlayerIndex;
 
+
+
     /**
      * Constructs a ClientHandler with the specified client socket, game host server, and player index.
      *
@@ -122,6 +124,9 @@ public class  ClientHandler implements Runnable {
       case UPDATE_BOARD:
           processUpdateBoardMessage(msg);
           break;
+      case ADD_BOT:
+        processAddBotMessage(msg);
+        break;
       case DISCONNECT_GAME:
         processDisconnectGameMessage(msg);
         break;
@@ -131,7 +136,20 @@ public class  ClientHandler implements Runnable {
     }
   }
 
-    /**
+  private void processAddBotMessage(Message msg) {
+    AddBotMessage addBotMessage = (AddBotMessage) msg;
+    if (lobby != null && !lobby.isGameStarted()) {
+      lobby.addBot();
+      send(addBotMessage);
+      if (lobby.getCurrentNumOfPlayers() == lobby.getNumOfPlayers()) {
+        gameHostServer.startGame(lobby);
+      }
+    } else {
+      send("No lobby to add bot to or game already started");
+    }
+  }
+
+  /**
      * Processes an UpdatePawnsMessage.
      *
      * @param msg the message to process
@@ -171,6 +189,7 @@ public class  ClientHandler implements Runnable {
       lobbyPlayerIndex = lobby.getCurrentNumOfPlayers() - 1;
       joinMessage.setPlayerIndex(lobbyPlayerIndex);
       joinMessage.setAccepted(true);
+      joinMessage.setGameType(lobby.getGameType());
       send(joinMessage);
       send("Connected to lobby number: " + joinMessage.getUniqueLobbyNumber());
       if (lobby.getCurrentNumOfPlayers() == lobby.getNumOfPlayers()) {
@@ -302,4 +321,5 @@ public class  ClientHandler implements Runnable {
       send(new EndGameMessage(lobby.getIndexOfWinner()));
     }
   }
+
 }

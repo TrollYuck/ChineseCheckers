@@ -215,18 +215,18 @@ public class GameHostServer {
    * Creates a new lobby with the specified number of players and board type.
    *
    * @param numOfPlayers the number of players for the lobby
-   * @param boardType the type of board for the lobby
+   * @param gameType the type of game for the lobby
    * @param client the client creating the lobby
    * @return true if the lobby was created successfully, false otherwise
    */
-  public Boolean createLobby(int numOfPlayers, String boardType, ClientHandler client) {
+  public Boolean createLobby(int numOfPlayers, String gameType, ClientHandler client) {
     try {
-      Lobby lobby = CreateLobby.createLobby(numOfPlayers, boardType);
+      Lobby lobby = CreateLobby.createLobby(numOfPlayers, "star", gameType);
       activeLobbies.add(lobby);
       activeLobbiesCount++;
       return true;
     } catch (IllegalBoardTypeException IBE) {
-      client.send("Invalid board type: " + boardType);
+      client.send("Invalid type: " + gameType);
       return false;
     } catch (IllegalNumberOfPlayersException INP) {
       client.send("Invalid number of players: " + numOfPlayers);

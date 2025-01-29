@@ -52,5 +52,15 @@ public enum MessageType {
   /**
    * Message type for updating the board in a game.
    */
-  UPDATE_BOARD
+  UPDATE_BOARD,
+
+  /**
+   * Message type for adding a bot to a game.
+   */
+  ADD_BOT,
+
+  /**
+   * Message type for loading a game.
+   */
+  LOAD_GAME
 }

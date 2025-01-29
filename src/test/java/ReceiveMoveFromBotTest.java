@@ -12,7 +12,7 @@ public class ReceiveMoveFromBotTest {
     @Test
     public void receiveMoveFromBotTest() {
         lobby.startGame();
-        lobby.addBot(1);
+        lobby.addBot();
         lobby.receiveMove(new Move(new Pair<>(3,3 ), new Pair<>(5,7)), 0);
         System.out.println(lobby.getAllPawnCoordinates());
     }
