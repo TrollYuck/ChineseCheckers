@@ -96,6 +96,7 @@ public class StandardGameplay implements Gameplay{
     /**
      * Checks for winning conditions.
      */
+
     public void checkForWinningConditions() {
         boolean ok = true;
         for(int i = 0; i < 4; i ++) {
@@ -351,6 +352,7 @@ public class StandardGameplay implements Gameplay{
         if(playerIndex == currentPlayerIndex) {
             if(isMoveLegal(players.get(playerIndex), move)) {
                 movePawn(move, playerIndex);
+                checkForWinningConditions();
                 currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
                 if(bots.contains(currentPlayerIndex)) {
                     getBotsMove(currentPlayerIndex);
