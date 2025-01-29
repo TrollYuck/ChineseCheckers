@@ -1,6 +1,7 @@
 package pwr.tp.client.GUI;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,6 +52,7 @@ public class ClientMainViewController {
    * The menu item to show the about window.
    */
   public MenuItem AboutMenuItem;
+  public MenuItem savedGamesGameMenuItem;
 
   /**
    * List of available lobbies.
@@ -242,22 +244,24 @@ public class ClientMainViewController {
     try {
       if (selectedLobbyId >= 0) {
         mim.joinGame(selectedLobbyId);
-        //waitForInGame();
-        Platform.runLater(() -> {
-          try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/InGameView.fxml"));
-            Parent root = loader.load();
+        waitForInGame();
+        if (mim.isInGame()) {
+          Platform.runLater(() -> {
+            try {
+              FXMLLoader loader = new FXMLLoader(getClass().getResource("/InGameView.fxml"));
+              Parent root = loader.load();
 
-            InGameViewController controller = loader.getController();
-            controller.setupInGameView(mim);
+              InGameViewController controller = loader.getController();
+              controller.setupInGameView(mim);
 
-            Stage stage = (Stage) ClientMainView.getScene().getWindow();
-            stage.setScene(new Scene(root));
-          } catch (IOException e) {
-            ErrorPopUpUtil.showErrorPopUp("Failed to load InGameView.fxml: " + e.getMessage());
-            e.printStackTrace();
-          }
-        });
+              Stage stage = (Stage) ClientMainView.getScene().getWindow();
+              stage.setScene(new Scene(root));
+            } catch (IOException e) {
+              ErrorPopUpUtil.showErrorPopUp("Failed to load InGameView.fxml: " + e.getMessage());
+              e.printStackTrace();
+            }
+          });
+        }
       } else {
         ErrorPopUpUtil.showErrorPopUp("No lobby selected");
       }
@@ -314,4 +318,7 @@ public class ClientMainViewController {
   }
 
 
+  public void showSavedGames(ActionEvent actionEvent) {
+
+  }
 }

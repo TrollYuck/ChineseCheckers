@@ -29,4 +29,8 @@ public class CreateLobby {
         }
         throw new IllegalBoardTypeException();
     }
+
+    public static Lobby loadLobby(int gameIndex) {
+        return new Lobby(gameIndex);
+    }
 }

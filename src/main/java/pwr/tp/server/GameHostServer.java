@@ -234,6 +234,18 @@ public class GameHostServer {
     }
   }
 
+  public Boolean loadLobby(int gameIndex, ClientHandler client) {
+    try {
+      Lobby lobby = CreateLobby.loadLobby(gameIndex);
+      activeLobbies.add(lobby);
+      activeLobbiesCount++;
+      return true;
+    } catch (Exception e) {
+      client.send("Error loading game: " + gameIndex);
+      return false;
+    }
+  }
+
   /**
    * Returns the list of active lobbies.
    *

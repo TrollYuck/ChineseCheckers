@@ -279,6 +279,9 @@ public class MIMGui {
     send(new UpdatePawnsMessage());
   }
 
+  public void updateALLPawnsRequest() {
+  }
+
   /**
    * Processes the UpdatePawnsMessage received from the server.
    *
@@ -396,8 +399,15 @@ public class MIMGui {
     }
   }
 
+  public void refreshMap() {
+  }
+
   public void addBot() {
     send(new AddBotMessage());
+  }
+
+  public void loadGame(int gameId) {
+    send(new LoadGameMessage(gameId));
   }
 
 }

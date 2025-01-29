@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -110,6 +111,9 @@ public class  ClientHandler implements Runnable {
       case CREATE_GAME:
         processCreateGameMessage(msg);
         break;
+      case LOAD_GAME:
+        processLoadGameMessage(msg);
+        break;
       case LIST_GAMES:
         List<Lobby> activeLobbiesList = gameHostServer.getActiveLobbies();
         List<String> activeLobbiesString = new ArrayList<>();
@@ -133,6 +137,15 @@ public class  ClientHandler implements Runnable {
       default:
         send("Unknown message type");
         break;
+    }
+  }
+
+  private void processLoadGameMessage(Message msg) {
+    LoadGameMessage loadGameMessage = (LoadGameMessage) msg;
+    if (gameHostServer.loadLobby(loadGameMessage.getGameID(), this)) {
+      send("Game loaded");
+    } else {
+      send("Unable to load game");
     }
   }
 
@@ -318,7 +331,8 @@ public class  ClientHandler implements Runnable {
    */
   private void checkWinner() {
     if (lobby.getIndexOfWinner() != -1) {
-      send(new EndGameMessage(lobby.getIndexOfWinner()));
+      gameHostServer.sendToAllInLobby(new EndGameMessage(lobby.getIndexOfWinner()), lobby, this);
+      lobby.endGame();
     }
   }
 

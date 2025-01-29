@@ -33,7 +33,6 @@ public class Move {
 
             Pair<Integer, Integer> coordinates = queue.getFirst().getCoordinates();
             queue.removeFirst();
-            System.out.println(coordinates);
             if(coordinates.equals(move.finalPosition)) {
                 return true;
             }
@@ -56,9 +55,6 @@ public class Move {
                     result.add(stripe);
                 }
             }
-        }
-        for(Stripe stripe: result) {
-            System.out.println(stripe.getFieldsInRow());
         }
         return result;
     }

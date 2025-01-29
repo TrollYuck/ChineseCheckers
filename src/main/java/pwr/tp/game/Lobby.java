@@ -193,9 +193,6 @@ public class Lobby  {
   public boolean receiveMove(Move move, int playerIndex) {
     try {
       currentGame.receiveMove(move, playerIndex);
-//      if (!gameType.equals("double base")) {
-//        currentGame.checkForWinningConditions();
-//      }
       databaseManager.recordMove(playerIndex, move.getInitialPosition().toString(),
               move.getFinalPosition().toString());
       return true;
@@ -281,5 +278,9 @@ public class Lobby  {
 
   public String getGameType() {
     return gameType;
+  }
+
+  public void endGame() {
+    databaseManager.endGame(currentGame.getIndexOfWinner());
   }
 }

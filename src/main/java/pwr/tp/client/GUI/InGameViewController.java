@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
  */
 public class InGameViewController {
 
+  public Button AddBotButton;
   /**
    * The MIMGui instance for managing the game logic and communication.
    */
