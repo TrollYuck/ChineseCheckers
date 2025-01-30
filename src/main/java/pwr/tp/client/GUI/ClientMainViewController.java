@@ -319,6 +319,21 @@ public class ClientMainViewController {
 
 
   public void showSavedGames(ActionEvent actionEvent) {
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SavedGamesWindow.fxml"));
+      Parent root = fxmlLoader.load();
 
+      SavedGamesWindowController controller = fxmlLoader.getController();
+      controller.setMim(mim);
+      controller.show();
+
+      Stage stage = new Stage();
+      stage.setTitle("Saved Games");
+      stage.setScene(new Scene(root));
+      stage.show();
+    } catch (IOException e) {
+      ErrorPopUpUtil.showErrorPopUp("Failed to load SavedGamesWindow.fxml: " + e.getMessage());
+      e.printStackTrace();
+    }
   }
 }

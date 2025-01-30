@@ -142,6 +142,7 @@ public class  ClientHandler implements Runnable {
 
   private void processLoadGameMessage(Message msg) {
     LoadGameMessage loadGameMessage = (LoadGameMessage) msg;
+    System.out.println(loadGameMessage.getGameID());
     if (gameHostServer.loadLobby(loadGameMessage.getGameID(), this)) {
       send("Game loaded");
     } else {

@@ -242,6 +242,7 @@ public class GameHostServer {
       return true;
     } catch (Exception e) {
       client.send("Error loading game: " + gameIndex);
+      System.err.println(e);
       return false;
     }
   }

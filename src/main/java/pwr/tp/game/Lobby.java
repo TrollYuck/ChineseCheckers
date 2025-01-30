@@ -78,10 +78,12 @@ public class Lobby  {
     databaseManager = new DatabaseManager(DataOperator.jdbcTemplate());
     databaseManager.setGameId(loadGameIndex);
     List<String> gameData = databaseManager.getGamesInProgress(false);
-    this.numOfPlayers = Integer.parseInt(gameData.get(1));
-    this.gameType = gameData.get(4);
+    String loadedGameInfo = gameData.get(loadGameIndex);
+    String[] loadedList = loadedGameInfo.split(",");
+    this.numOfPlayers = Integer.parseInt(loadedList[1]);
+    this.gameType = loadedList[4];
     this.board = new StarBoard();
-    this.uniqueLobbyNumber = -1;
+    this.uniqueLobbyNumber = COUNT.getAndIncrement();
     this.loadedGame = true;
   }
 

@@ -57,25 +57,25 @@ public class DatabaseManager {
   }
 
   public List<String> getGamesInProgress(boolean showoff) {
-    String sql = "SELECT game_id, player_count, bots_amount, start_time, type FROM games WHERE end_time IS NULL";
+    String sql = "SELECT game_id, player_count, bots_amount, start_time, game_type FROM games WHERE end_time IS NULL";
     if (showoff) {
       return jdbcTemplate.query(sql, (rs, rowNum) ->
               String.format("Game ID: %d, Players: %d, Bots: %d, Start time: %s, Type: %s",
                       rs.getInt("game_id"), rs.getInt("player_count"), rs.getInt("bots_amount"),
-                      rs.getTimestamp("start_time"), rs.getString("type")));
+                      rs.getTimestamp("start_time"), rs.getString("game_type")));
     } else {
       return jdbcTemplate.query(sql, (rs, rowNum) ->
               String.format("%d,%d,%d,%s,%s",
                       rs.getInt("game_id"), rs.getInt("player_count"), rs.getInt("bots_amount"),
-                      rs.getTimestamp("start_time"), rs.getString("type")));
+                      rs.getTimestamp("start_time"), rs.getString("game_type")));
     }
   }
 
   public List<String> getGamesHistory() {
-    String sql = "SELECT game_id, player_count, bots_amount, start_time, end_time, winner_id, type FROM games WHERE end_time IS NOT NULL";
+    String sql = "SELECT game_id, player_count, bots_amount, start_time, end_time, winner_id, game_type FROM games WHERE end_time IS NOT NULL";
     return jdbcTemplate.query(sql, (rs, rowNum) ->
             String.format("Game ID: %d, Players: %d, Bots: %d, Start time: %s, End time: %s, Winner ID: %d, Type: %s",
                     rs.getInt("game_id"), rs.getInt("player_count"), rs.getInt("bots_amount"),
-                    rs.getTimestamp("start_time"), rs.getTimestamp("end_time"), rs.getInt("winner_id"), rs.getString("type")));
+                    rs.getTimestamp("start_time"), rs.getTimestamp("end_time"), rs.getInt("winner_id"), rs.getString("game_type")));
   }
 }

@@ -8,23 +8,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="savedGamesVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pwr.tp.client.GUI.SavedGamesWindowController">
    <children>
-      <ScrollPane prefHeight="318.0" prefWidth="600.0">
+      <ScrollPane fx:id="savedScrollPane" prefHeight="318.0" prefWidth="600.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
         </content>
       </ScrollPane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
          <children>
-            <TextField prefHeight="26.0" prefWidth="93.0" promptText="Game ID">
+            <TextField fx:id="gameIDTextField" prefHeight="26.0" prefWidth="93.0" promptText="Game ID">
                <font>
                   <Font name="System Italic" size="12.0" />
                </font>
             </TextField>
-            <Button mnemonicParsing="false" text="Load" />
-            <Button mnemonicParsing="false" text="Replay" />
+            <Button fx:id="loadSavedGameButton" mnemonicParsing="false" onAction="#loadSavedGame" style="-fx-background-color: gold; -fx-border-color: black; -fx-font-weight: bold;" text="Load" />
+            <Button fx:id="replaySavedGameButton" mnemonicParsing="false" onAction="#replaySavedGame" style="-fx-background-color: purple; -fx-text-fill: white; -fx-border-color: black; -fx-font-weight: bold;" text="Replay" />
          </children>
       </HBox>
    </children>
